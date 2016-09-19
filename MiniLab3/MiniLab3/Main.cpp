@@ -19,12 +19,13 @@ void print(string str)
 //main entry point of the application
 int main() {
 	print("Part 1: Explaining the algorithem in comments");
-	cout << "5 numbers";//prints out five numbers
+	print("See the comments in this code");
+	/*cout << "5 numbers";			//prints out five numbers
 	int a, b, c, d, e;
-	cin >> a >> b >> c >> d >> e;//takes in 5 values for input
+	cin >> a >> b >> c >> d >> e;	//takes in 5 values for input
 	int x;
-	x = a + b + c + d + e;//adds all the numbers together
+	x = a + b + c + d + e;			//adds all the numbers together
 	int f;
-	f = x/5;//divids all the numbers by the number of inputed values
-	//this appears to be an averaging algorithem
+	f = x/5;						//divids all the numbers by the number of inputed values
+									//this appears to be an averaging algorithem using integer math*/
 }
