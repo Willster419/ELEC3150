@@ -1,7 +1,7 @@
 /////////////////////////////////
 // Willard Wider               //
-// 09/11/16                    //
-// Mini Lab 1                  //
+// 09/16/16                    //
+// Mini Lab 2                  //
 /////////////////////////////////
 //basic start to the program
 #include <iostream>
@@ -54,6 +54,7 @@ void part1A()
 }
 void part1B()
 {
+	print("");
 	print("Part 1B: Grade with if case loop");
 	bool done = false;
 	while (!done)
@@ -91,33 +92,62 @@ void part1B()
 }
 void part2()
 {
-	print(" Part 2: Find the Bug");
-	int number;
-	cout << "Enter a number ";
-	cin >> number;
-	if(number = 10)
-		cout << "?!?!?!" << endl;
-	if(number < 10)
-		cout << "!!!!!!" << endl;
-	if(number > 10)
-		cout << "??????" << endl;
+	print("");
+	print("Part 2: answer is commented in the method part2()");
+	print("long story short it's about = vs. ==");
+	//<---
+	/*
+	#include <iostream>
+	using namespace std;
+	int main(){
+		int number;
+		cout << "Enter a number ";
+		cin >> number;
+		if(number = 10)<-------------------------------- This needs to be "==". = is assignment, == is comparison
+			cout << "?!?!?!" << endl;
+		if(number < 10)
+			cout << "!!!!!!" << endl;
+		if(number > 10)
+			cout << "??????" << endl;
+	}*/
 }
 void part3()
 {
-	print(" Part 3: What is the outcome of the following code? Explain WHY.\nint x = 5;\nif(x++ > 5)\n\tcout << 'Greater!';\nelse\n\tcout << 'Not!';");
+	print("");
+	print("Part 3: code outcome of ++x vs x++");
+	/*int x = 5;
+	if(x++ > 5)
+		cout << "Greater!";
+	else
+		cout << "Not!";*/
+	print("it will print 'not' because x++ means use x as it is for that line of code, and then increment if by 1. therefore x(5)>5 is false");
+	
 }
 void part4()
 {
-
+	print("");
+	print("Part 4:");
+	print("If '++x' were used it would print 'greater' because it +1's x, then uses it for comparison, where 6 > 5");
+}
+void part5()
+{
+	print("");
+	print("Part 5: Rank the loop types");
+	print("1. For loop because it is easy to traverse arrays, and can be used as a puerly conditional statement");
+	print("2. While loop because if can do the same thing as a for loop, but the condition needs to be delcared outside the scope");
+	print("3. Do-While loop because it is basicly a while loop that will run at least once and i have neved needed to use one ever");
 }
 int main()
 {
 	print("Mini Lab 2");
+	print("");
 	part1A();
 	part1B();
 	part2();
 	part3();
 	part4();
+	part5();
+	print("");
 	print("Press enter to continue...");
 	cin.get();
 	cin.get();
