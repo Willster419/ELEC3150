@@ -9,8 +9,9 @@
 #include <string>
 #include <sstream>
 #include <ctime>
-#include "labAPI.h"
+#include "LabAPI.h"
 #include <cstdlib>
+//some constants to help with eliminating magic numbers
 #define KEY_BITMASK 69
 const unsigned char ASCII_LOW = 32;
 const unsigned char ASCII_HIGH = 126;
@@ -50,8 +51,9 @@ unsigned char subInRange(unsigned char currentPOS, unsigned char add)
 //returns a key char based on a random number generator seeded with the time function, therefore always random upon run
 unsigned char generateKey()
 {
-	srand(time(0));
-	return rand() % 70 + 40;
+	srand(time(0));//seed the random number generator with the number of seconds since 2000. or 1970. one of them.
+	//doing that provides randomization for each encryption algorithem
+	return rand() % 70 + 40;//keep it withen 40-110
 }
 
 
@@ -68,23 +70,25 @@ unsigned char bitMask(bool encryptOrDecrypt, unsigned char inputChar, unsigned c
 	}
 	else
 	{
+		//subs the key amount to the input character for bit masking, and keeps it withen
+		//a specified range, like the ascii character range, for example
 		inputChar = subInRange(inputChar,amount);
 		return inputChar;
 	}
-	return -1;
+	return -1;//if it gets here somehow, it's not supposed to, and is an error
 }
 
 //main encryption method, get the input string from main and outputs an encrypted string
 string encrypt(string input)
 {
 	//generate key
-	unsigned char ukey = generateKey();
-	unsigned char key = ukey;
-	key = bitMask(true,key,KEY_BITMASK);
+	unsigned char ukey = generateKey();//gets a random un-encrypted key
+	unsigned char key = ukey;//copies it to a char tha twill be encrypted for the encrypted message
+	key = bitMask(true,key,KEY_BITMASK);//does bitMask with a defined amount so the key can be decrypted later
 	//encrypt message
 	for(int i = 0; i < input.size(); i++)
 	{
-		input[i] = bitMask(true,input[i],ukey);
+		input[i] = bitMask(true,input[i],ukey);//encrypt each character in the string
 	}
 	//attach encrypted key
 	input += key;
@@ -99,14 +103,14 @@ string decrypt(string input)
 	//unswap the string
 	input = swapString(input);
 	//extract encrypted key
-	unsigned char key = input[input.size()-1];
-	input.erase(input.size()-1,1);
+	unsigned char key = input[input.size()-1];///get the encrypted key from the character string
+	input.erase(input.size()-1,1);//removes the key character from the encrypted message
 	//decrypt key
-	key = bitMask(false,key,KEY_BITMASK);
+	key = bitMask(false,key,KEY_BITMASK);//decrypts the key
 	//decrypt message
 	for(int i = 0; i < input.size(); i++)
 	{
-		input[i] = bitMask(false,input[i],key);
+		input[i] = bitMask(false,input[i],key);//decrypts the entire message
 	}
 	return input;
 }
@@ -130,6 +134,7 @@ int main()
 			//encrypt
 			print("your encrypted message is ");
 			input = encrypt(input);
+			//just in case one is copying and pasting the message, check for if the last character is acutally a space
 			if(input[input.size()-1] == ' ')
 			{
 				print("");
@@ -146,6 +151,7 @@ int main()
 			//decrypt
 			print("your decrypted message is ");
 			input = decrypt(input);
+			//same as above
 			if(input[input.size()-1] == ' ')
 			{
 				print("");
