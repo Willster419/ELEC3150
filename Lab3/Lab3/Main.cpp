@@ -2,7 +2,7 @@
 // Willard Wider               //
 // 09/21/16                    //
 // Lab 3                       //
-// Last Modified 09/21/16      //
+// Last Modified 09/22/16      //
 /////////////////////////////////
 //basic start to the program
 #include <iostream>
@@ -11,131 +11,128 @@
 #include <ctime>
 #include "labAPI.h"
 #include <cstdlib>
-#define KEY_BITMASK 69
+#define KEY_BITMASK 5
+const unsigned char ASCII_LOW = 32;
+const unsigned char ASCII_HIGH = 126;
 using namespace std;
 
-//even more stuff
-unsigned char addInRange(unsigned char low, unsigned char high, unsigned char currentPOS, unsigned char add)
+//adds a specific ammount to a number withen a specified range i.e. creating a new "base" to work off of
+unsigned char addInRange(unsigned char currentPOS, unsigned char add)
 {
-	if(high >= currentPOS+add)
+	//get the adition down
+	add = add % (ASCII_HIGH-ASCII_LOW)-1;
+	if(ASCII_HIGH >= currentPOS+add)
 	{
 		return currentPOS+add;
 	}
-	unsigned char answer = (currentPOS+add) - (high+1);
-	unsigned char room = high - low;
-	answer = answer%room;
-	return low+answer;
+	unsigned extra = (currentPOS + add) - ASCII_HIGH;
+	unsigned char answer = extra + (ASCII_LOW-1);
+	return answer;
 }
 
-//even more cool stuff
-unsigned char subInRange(short low, short high, short currentPOS, short add)
+//subtracts from a number withen its own "base"
+unsigned char subInRange(unsigned char currentPOS, unsigned char add)
 {
-	if(low <= currentPOS-add)
+	//get the adition down
+	add = add % (ASCII_HIGH-ASCII_LOW)-1;
+	if(ASCII_LOW <= currentPOS-add)
 	{
 		return currentPOS-add;
 	}
-	short answer = (currentPOS-add) - (low-1);
-	//answer++;
-	answer = answer*-1;
-	short room = high - low;
-	answer = answer%room;
-	return high-answer;
+	//kill the 32 offset
+	unsigned char answer = currentPOS-ASCII_LOW;
+	answer -= add;
+	answer -=ASCII_HIGH+3;
+	return answer;
 }
 
-//sets a key char based on a random number generator seeded with the time function, therefore always
+/*
+//returns a key char based on a random number generator seeded with the time function, therefore always random upon run
 unsigned char generateKey()
 {
 	srand(time(0));
-	return rand();
+	return rand() % 126 + 32;
 }
+*/
 
+//adds encryption by masking the input character by a specified ammount
 unsigned char bitMask(bool encryptOrDecrypt, unsigned char inputChar, unsigned char amount)
 {
 	//true = encrypting, false = decrypting
 	if (encryptOrDecrypt)
 	{
-		
-		inputChar = addInRange(32,126,inputChar,amount);
+		//adds the key amount to the input character for bit masking, and keeps it withen
+		//a specified range, like the ascii character range, for example
+		inputChar = addInRange(inputChar,amount);
 		return inputChar;
-		
-		/*inputChar += amount;
+		//old method origionaly tried to add withen a specific range
+		/*
+		inputChar += amount;
 		while (32 > inputChar || inputChar > 127)
 		{
-			inputChar += amount;
+		inputChar += amount;
 		}
-		return inputChar;*/
+		return inputChar;
+		*/
 	}
 	else
 	{
-		inputChar = subInRange(32,126,inputChar,amount);
+		inputChar = subInRange(inputChar,amount);
 		return inputChar;
+		//old method origionaly tried to subtract withen a specific range
 		/*
 		inputChar -= amount;
 		while (32 > inputChar || inputChar > 127)
 		{
-			inputChar -= amount;
-		}*/
+		inputChar -= amount;
+		}
+		*/
 		return inputChar;
 	}
 	return -1;
 }
 
-//xor bit logic. second phase of encryption
+/*
+//xor bit logic.
 unsigned char xor(unsigned char c,unsigned char key)
 {
-	c = (c ^= key);
-	return c;
+c = (c ^= key);
+return c;
 }
+*/
 
-//bit inversion. the third phase of encryption
+//bit inversion logic.
+
+/*
 unsigned char invert(unsigned char c)
 {
 	return ~c;
 }
+*/
 
-//stuff
+//main encryption method, get the input string from main and outputs an encrypted string
 string encrypt(string input)
 {
-	//generate key
-	unsigned char ukey = generateKey();
-	unsigned char key = ukey;
-	//encrypt key
-	//key = xor(key,KEY_BITMASK);
-	//key = invert(key);
-	key = bitMask(true,key,KEY_BITMASK);
 	//encrypt message
 	for(int i = 0; i < input.size(); i++)
 	{
-		//input[i] = xor(input[i],ukey);
-		//input[i] = invert(input[i]);
-		//input[i] = bitMask(true,input[i],xor(input[i],ukey));
-		//input[i] = bitMask(true,input[i],invert(ukey));
-		input[i] = bitMask(true,input[i],ukey);
+		input[i] = bitMask(true,input[i],KEY_BITMASK);
 	}
-	//attach encrypted key
-	input += key;
+	//swap the string
+	//input = swapString(input);
 	return input;
 }
 
-//more stuff
+//main decryption method, get the input string from main and outputs a decrypted version of the string
 string decrypt(string input)
 {
-	//remove encrypted key
-	unsigned char key = input[input.size()-1];
-	//decrypt key
-	key = bitMask(false,key,KEY_BITMASK);
-	//key = invert(key);
-	//key = xor(key,KEY_BITMASK);
+	//unswap the string
+	//input = swapString(input);
 	//decrypt message
-	for(int i = 0; i < input.size()-1; i++)
+	for(int i = 0; i < input.size(); i++)
 	{
-		input[i] = bitMask(false,input[i],key);
-		//input[i] = bitMask(false,input[i],invert(key));
-		//input[i] = bitMask(false,input[i],xor(key,key));
-		//input[i] = invert(input[i]);
-		//input[i] = xor(input[i],key);
+		input[i] = bitMask(false,input[i],KEY_BITMASK);
 	}
-	input = input.substr(0,input.size()-1);
 	return input;
 }
 
@@ -156,18 +153,24 @@ int main()
 			print("type message to encrypt");
 			getline(cin,input);
 			//encrypt
-			print("your encrypted message is " + encrypt(input));
-			print("press enter to continue...");
-			getline(cin,input);
+			print("your encrypted message is ");
+			input = encrypt(input);
+			if(input[input.size()-1] == ' ')
+			{
+				print("");
+				print("THERE IS A SPACE AT THE END OF THAT SENTANCE");
+				print("if you would like, encrypt it again to get a new string without a space");
+				print("");
+			}
+			print(input);
 		}
 		else if (input == "decrypt")
 		{
 			print("type message to decrypt");
 			getline(cin,input);
 			//decrypt
-			print("your decrypted message is " + decrypt(input));
-			print("press enter to continue...");
-			getline(cin,input);
+			print("your decrypted message is ");
+			print(decrypt(input));
 		}
 		else if (input == "exit")
 		{

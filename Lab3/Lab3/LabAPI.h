@@ -11,7 +11,7 @@
 #include <cstdlib>
 using namespace std;
 ostringstream oss;//extra string stream to allow for other types than strings to be added to an output
-
+string swapstring;
 //method to simplifing the procedure of printing to the console
 void print(string str)
 {
@@ -45,4 +45,16 @@ int size(unsigned char temp[])
 		tempp++;
 	}
 	return tempp;
+}
+
+//swapps all the items of a given array from top and bottom
+string swapString (string stringToSwap)
+{
+	string temp = stringToSwap;
+	for (int i = 0; i < stringToSwap.size(); i++)
+	{
+		char tempp = stringToSwap[i];
+		temp[stringToSwap.size()-i-1] = tempp;
+	}
+	return temp;
 }
