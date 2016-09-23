@@ -2,7 +2,7 @@
 // Willard Wider               //
 // 09/21/16                    //
 // Lab 3                       //
-// Last Modified 09/22/16      //
+// Last Modified 09/23/16      //
 /////////////////////////////////
 //basic start to the program
 #include <iostream>
@@ -11,7 +11,7 @@
 #include <ctime>
 #include "labAPI.h"
 #include <cstdlib>
-#define KEY_BITMASK 5
+#define KEY_BITMASK 69
 const unsigned char ASCII_LOW = 32;
 const unsigned char ASCII_HIGH = 126;
 using namespace std;
@@ -46,14 +46,14 @@ unsigned char subInRange(unsigned char currentPOS, unsigned char add)
 	return answer;
 }
 
-/*
+
 //returns a key char based on a random number generator seeded with the time function, therefore always random upon run
 unsigned char generateKey()
 {
 	srand(time(0));
-	return rand() % 126 + 32;
+	return rand() % 70 + 40;
 }
-*/
+
 
 //adds encryption by masking the input character by a specified ammount
 unsigned char bitMask(bool encryptOrDecrypt, unsigned char inputChar, unsigned char amount)
@@ -65,61 +65,31 @@ unsigned char bitMask(bool encryptOrDecrypt, unsigned char inputChar, unsigned c
 		//a specified range, like the ascii character range, for example
 		inputChar = addInRange(inputChar,amount);
 		return inputChar;
-		//old method origionaly tried to add withen a specific range
-		/*
-		inputChar += amount;
-		while (32 > inputChar || inputChar > 127)
-		{
-		inputChar += amount;
-		}
-		return inputChar;
-		*/
 	}
 	else
 	{
 		inputChar = subInRange(inputChar,amount);
 		return inputChar;
-		//old method origionaly tried to subtract withen a specific range
-		/*
-		inputChar -= amount;
-		while (32 > inputChar || inputChar > 127)
-		{
-		inputChar -= amount;
-		}
-		*/
-		return inputChar;
 	}
 	return -1;
 }
 
-/*
-//xor bit logic.
-unsigned char xor(unsigned char c,unsigned char key)
-{
-c = (c ^= key);
-return c;
-}
-*/
-
-//bit inversion logic.
-
-/*
-unsigned char invert(unsigned char c)
-{
-	return ~c;
-}
-*/
-
 //main encryption method, get the input string from main and outputs an encrypted string
 string encrypt(string input)
 {
+	//generate key
+	unsigned char ukey = generateKey();
+	unsigned char key = ukey;
+	key = bitMask(true,key,KEY_BITMASK);
 	//encrypt message
 	for(int i = 0; i < input.size(); i++)
 	{
-		input[i] = bitMask(true,input[i],KEY_BITMASK);
+		input[i] = bitMask(true,input[i],ukey);
 	}
+	//attach encrypted key
+	input += key;
 	//swap the string
-	//input = swapString(input);
+	input = swapString(input);
 	return input;
 }
 
@@ -127,11 +97,16 @@ string encrypt(string input)
 string decrypt(string input)
 {
 	//unswap the string
-	//input = swapString(input);
+	input = swapString(input);
+	//extract encrypted key
+	unsigned char key = input[input.size()-1];
+	input.erase(input.size()-1,1);
+	//decrypt key
+	key = bitMask(false,key,KEY_BITMASK);
 	//decrypt message
 	for(int i = 0; i < input.size(); i++)
 	{
-		input[i] = bitMask(false,input[i],KEY_BITMASK);
+		input[i] = bitMask(false,input[i],key);
 	}
 	return input;
 }
@@ -170,7 +145,15 @@ int main()
 			getline(cin,input);
 			//decrypt
 			print("your decrypted message is ");
-			print(decrypt(input));
+			input = decrypt(input);
+			if(input[input.size()-1] == ' ')
+			{
+				print("");
+				print("THERE IS A SPACE AT THE END OF THAT SENTANCE");
+				print("if you would like, encrypt it again to get a new string without a space");
+				print("");
+			}
+			print(input);
 		}
 		else if (input == "exit")
 		{
