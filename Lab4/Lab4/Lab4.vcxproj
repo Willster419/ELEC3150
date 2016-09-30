@@ -61,6 +61,7 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="Main.cpp" />
+    <ClCompile Include="ticTacToe_template.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="LabAPI.h" />
