@@ -62,7 +62,7 @@ bool checkForWinner(char (TTTarray[])[3], char theSym);
 
 	if (isOver || xWon || yWon)
 	{
-		print("the game is over");
+		print("gg no re");
 		break;
 	}
 	insertO(TTTarray);
