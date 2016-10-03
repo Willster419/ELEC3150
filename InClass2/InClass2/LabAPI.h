@@ -26,6 +26,13 @@ void print(unsigned char c)
 	oss.str("");
 }
 
+//method to simplifing the procedure of printing to the console
+void print(int i)
+{
+	cout << i << "\n";
+	oss.str("");
+}
+
 //returns the size of the character array of characters that are in use
 int size(char temp[])
 {
