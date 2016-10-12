@@ -21,7 +21,7 @@ const char enemySymbol = 'O';
 
 //method stub things
 void insertX(char (TTTarray[])[3], bool &isOver);
-void insertO(char (TTTarray[])[3]);
+void insertO(char (&TTTarray)[3][3]);
 void checkForWin(char (TTTarray[])[3]); // IGNORE THIS FOR NOW
 void printTTT(char (TTTarray[])[3]);
 bool react(char (TTTarray[])[3]);
@@ -73,6 +73,8 @@ int main( )
 			break;
 		}
 		insertO(TTTarray);
+
+		printTTT(TTTarray);
 	}
 	/*****************
 	I have included the declaratoin of the array, initialized to - for each spot.
@@ -201,6 +203,73 @@ void insertX(char (TTTarray[])[3], bool &isOver)
 	moveNum++;
 }
 
+void insertO (char (&TTTarray)[3][3]) {			//makes an optimized move in response to X
+	//these first if and else if's are in case there are two X's and we want to prevent a win.
+	if (TTTarray[0][0] == 'X' && TTTarray[0][2] == 'X' && TTTarray[0][1] == '-'){	//horizontal row 1
+		TTTarray[0][1] = 'O';		//place a O if between X's
+		}	//ends if statement
+	
+	else if (TTTarray[0][0] == 'X' && TTTarray[2][0] == 'X' && TTTarray[1][0] == '-') {	//vertical column 1
+		TTTarray[1][0] = 'O';
+	}//ends else if statement
+
+	else if (TTTarray[0][2] == 'X' && TTTarray[2][2] == 'X' && TTTarray[1][2] == '-') {	//vertical column 3
+		TTTarray[1][2] = 'O';
+	}//ends else if statement
+	
+	else if (TTTarray[2][0] == 'X' && TTTarray[2][2] == 'X' && TTTarray[2][1] == '-') {	//horizontal row 3
+		TTTarray[2][1] = 'O';
+	}//ends else if statement
+
+	else if (TTTarray[0][1] == 'X' && TTTarray[2][1] == 'X' && TTTarray[1][1] == '-') {	//vertical column 2
+		TTTarray[1][1] = 'O';
+	}//ends else if statement
+	
+	else if (TTTarray[1][0] == 'X' && TTTarray[1][2] == 'X' && TTTarray[1][1] == '-') {	//horizontal row 2
+		TTTarray[1][1] = 'O';
+	}//ends else if statement
+	
+	//*************************************************************
+	
+	// if defense not needed, place an X somewhere empty :D
+	else if (TTTarray[0][0] == '-') {
+		TTTarray[0][0] = 'O';
+	}//ends else if statement
+		
+		else if (TTTarray[0][1] == '-') {
+		TTTarray[0][1] = 'O';
+	}//ends else if statement
+	
+		else if (TTTarray[0][2] == '-') {
+		TTTarray[0][2] = 'O';
+	}//ends else if statement
+		
+		else if (TTTarray[1][0] == '-') {
+		TTTarray[1][0] = 'O';
+	}//ends else if statement
+		
+		else if (TTTarray[1][1] == '-') {
+		TTTarray[1][1] = 'O';
+	}//ends else if statement
+		
+		else if (TTTarray[1][2] == '-') {
+		TTTarray[1][2] = 'O';
+	}//ends else if statement
+		
+		else if (TTTarray[2][0] == '-') {
+		TTTarray[2][0] = 'O';
+	}//ends else if statement
+		
+		else if (TTTarray[2][1] == '-') {
+		TTTarray[2][1] = 'O';
+	}//ends else if statement
+		
+		else if (TTTarray[2][2] == '-') {
+		TTTarray[2][2] = 'O';
+	}//ends else if statement
+}
+
+/*commented out for tommy's code
 //method for the enemy to put his/her algorithem. currently is for user input for testing and playing
 void insertO(char (TTTarray[])[3])
 {
@@ -227,9 +296,10 @@ void insertO(char (TTTarray[])[3])
 	}
 	//when it makes it here, the input is valid and the O is placed on the specified part on the array
 	TTTarray[y][x] = 'O';
-}
+}*/
 
 //method for checking for 2 X's or O's in a row, and eithor stop or complete it.
+
 bool react(char (TTTarray[])[3])
 {
 	//check if he will win first by looking for 2 O's next to each other in any point on the board

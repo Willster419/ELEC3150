@@ -11,8 +11,8 @@
     </ProjectConfiguration>
   </ItemGroup>
   <PropertyGroup Label="Globals">
-    <ProjectGuid>{DF5AD8B7-7EFB-49EB-B1EF-C0B95875730D}</ProjectGuid>
-    <RootNamespace>Lab4</RootNamespace>
+    <ProjectGuid>{7ED88064-74CC-47F9-A0F6-2B4995BF7CAD}</ProjectGuid>
+    <RootNamespace>InClass3</RootNamespace>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">
@@ -61,8 +61,6 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="Main.cpp" />
-    <ClCompile Include="ticTacToe_template.cpp" />
-    <ClCompile Include="Tommy Zhang InsertO Lab 5.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="LabAPI.h" />
