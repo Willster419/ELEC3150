@@ -117,13 +117,12 @@ string swapString (string stringToSwap)
 
 void run_complete()
 {
+	string temps;
 	cin.clear();
-	cin.ignore();
 	string temp;
 	print("Run Complete, press enter to continue...");
-	getline(cin,temp);
+	getline(cin,temps);
 	cin.clear();
-	cin.ignore();
 }
 
 void printArray (int arrayToPrint[],int size)
