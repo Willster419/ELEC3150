@@ -1,7 +1,7 @@
 /////////////////////////////////
 // Willard Wider               //
 // XX/XX/XX                    //
-// Mini Lab 1                  //
+// Lab X                       //
 // Last Modified XX/XX/XX      //
 /////////////////////////////////
 
@@ -19,11 +19,12 @@
 //constants
 
 
-//method stub things
+//method prototypes
 
 
-//other
+//other definitions
 using namespace std;
+
 
 //the main entry point of the application
 int main()
