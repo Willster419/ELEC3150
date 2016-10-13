@@ -27,8 +27,6 @@ void part4(char (&Q)[5]);
 
 //other
 using namespace std;
-char Q[5];
-char stack[5];
 
 //part 1
 void part1()
@@ -54,7 +52,7 @@ void part2()
 }
 
 //part 3
-void part3()
+void part3(char (&stack)[5])
 {
 	char temp;
 	print("part 3: LIFO (Stack)");
@@ -96,7 +94,7 @@ void part3()
 }
 
 //part 4
-void part4()
+void part4(char (&Q)[5])
 {
 	char temp;
 	print("part 4: FIFO (Queue)");
@@ -140,15 +138,17 @@ void part4()
 //the main entry point of the application
 int main()
 {
+	char Q[5] = {0};
+	char stack[5] = {0};//look at me being all cool with pass by refrence
 	print("Mini Lab 6");
 	print();
 	part1();
 	print();
 	part2();
 	print();
-	part3();
+	part3(stack);
 	print();
-	part4();
+	part4(Q);
 	print();
 	run_complete();
 	return 0;
