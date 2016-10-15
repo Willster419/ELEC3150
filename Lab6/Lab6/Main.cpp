@@ -65,7 +65,9 @@ int main()
 	count = QBSize();
 	addQB("Trent","Dilfer",2003);
 	count = QBSize();
-	printList();
+	int search = getIndex("Trent","Dilfer");//should return 2
+	search = getIndex("Trentt","Dilfer");//should return -1
+	//printList();
 	return 0;
 }
 
@@ -162,7 +164,21 @@ int addQBFromFile()
 //-1 indicates error
 int getIndex(string fN, string lN)
 {
-
+	int index = 0;
+	qb_t *temp = master;
+	while (true)
+	{
+		if ((temp->firstName == fN) && (temp->lastName == lN))
+		{
+			return index;
+		}
+		temp = temp->next;
+		index++;
+		if (temp->type == first_T)
+		{
+			break;
+		}
+	}
 	return -1;
 }
 
@@ -183,7 +199,7 @@ void printList()
 //-1 indicates error
 string getInfo(int index)
 {
-
+	
 	return "";
 }
 
