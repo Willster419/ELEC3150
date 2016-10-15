@@ -278,3 +278,9 @@ char dequeue(char (&Q)[5], int size)
 	}
 	return haGadi;
 }
+
+string IntToString (int a) {
+ostringstream temp;
+temp<<a;
+return temp.str();
+}
