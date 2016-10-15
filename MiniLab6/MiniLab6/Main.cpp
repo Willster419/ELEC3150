@@ -34,17 +34,18 @@ void part1()
 	print("Part 1");
 	print();
 	char theString[] = { 'A', 'B', 'C', 'D', 'E', 'F', 'G', 'H',};
-	char* pointer = theString;
-	for (int i = 0; i < 8; i++)
+	char* pointer = theString;//declaring a pointer that points to the first element in the array
+	for (int i = 0; i < 8; i++)//the int is only for holding the index when printing and using it the number of times in the array
 	{
 		cout << "char " << i << " is " << *pointer << "\n";
-		pointer++;
+		pointer++;//incriment the pointer by the bits of the data type
 	}
 }
 
 //part 2
 void part2()
 {
+	//just some text
 	print("part 2");
 	print();
 	print("changing it to a double array would change the ammount of bits required to be skipped with each ++");
@@ -54,6 +55,12 @@ void part2()
 //part 3
 void part3(char (&stack)[5])
 {
+	/*
+	* Print what it is doing
+	* (just) do it
+	* print what the array now looks like
+	* see labAPI.h for all stack and queue methods
+	*/
 	char temp;
 	print("part 3: LIFO (Stack)");
 	print();
@@ -96,6 +103,7 @@ void part3(char (&stack)[5])
 //part 4
 void part4(char (&Q)[5])
 {
+	//see part 3
 	char temp;
 	print("part 4: FIFO (Queue)");
 	print();
@@ -138,7 +146,7 @@ void part4(char (&Q)[5])
 //the main entry point of the application
 int main()
 {
-	char Q[5] = {0};
+	char Q[5] = {0};//starts each array index value to 0, or 'null'
 	char stack[5] = {0};//look at me being all cool with pass by refrence
 	print("Mini Lab 6");
 	print();
