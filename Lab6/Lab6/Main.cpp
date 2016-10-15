@@ -29,7 +29,7 @@ int deleteAll();
 int deleteQB(string fN, string lN);
 int deleteQB(int index);
 int QBSize();
-void addYear();
+void addYear(int *years, int size, int year);
 void initYearsArray(int *years, int size);
 string getAllWins(int *yearsWon, int size);
 
@@ -61,8 +61,10 @@ int main()
 	count = QBSize();
 	addQB("Trent2","Dilfer2",2001);
 	count = QBSize();
-	//addQB("Trent","Dilfer",2001);
-	//count = QBSize();
+	addQB("Trent","Dilfer",2002);
+	count = QBSize();
+	addQB("Trent","Dilfer",2003);
+	count = QBSize();
 	printList();
 	return 0;
 }
@@ -104,12 +106,46 @@ int addQB(string fName, string lName, int year)
 		(*temp).type=last_T;
 		temp->next = master;
 		temp->previous=master;
+		master->previous = temp;
 		return 1;
 	}
 	else
 	{
-		//traverse to the end of the list
+		//traverse to the last element in the list
 		//create and link
+		qb_t *temp = master;
+		while (temp->type != last_T)
+		{
+			//check for first and last name match
+			if ((temp->firstName == fName) && (temp->lastName == lName))
+			{
+				//just add the year and pluz the wins
+				temp->numWins++;
+				addYear(temp->years,YEARS_ARRAY_LENGTH,year);
+				break;
+			}
+			temp = temp->next;
+		}
+		if ((temp->firstName == fName) && (temp->lastName == lName))
+			{
+				//just add the year and pluz the wins
+				temp->numWins++;
+				addYear(temp->years,YEARS_ARRAY_LENGTH,year);
+				return 1;
+			}
+		temp->type = other_T;
+		temp->next = new qb_t;
+		qb_t *theRealNext = temp->next;
+		(*theRealNext).firstName=fName;
+		(*theRealNext).lastName=lName;
+		(*theRealNext).numWins=1;
+		int *yearsPointer = (*theRealNext).years;
+		initYearsArray(yearsPointer, YEARS_ARRAY_LENGTH);
+		(*theRealNext).years[0]=year;
+		(*theRealNext).type=last_T;
+		theRealNext->next = master;
+		theRealNext->previous = temp;
+		master->previous = theRealNext;
 	}
 	return -1;
 }
@@ -194,14 +230,25 @@ int QBSize()
 	return count;
 }
 
-void addYear(int year)
+void addYear(int *years, int size, int year)
 {
+	for (int i = 0; i < YEARS_ARRAY_LENGTH; i++)
+	{
+		if (years[i]==0)
+			{
+				years[i] = year;
+				break;
+			}
+		else
+		{
 
+		}
+	}
 }
 
 void initYearsArray(int *years, int size)
 {
-	for (int i = 0; i < YEARS_ARRAY_LENGTH; i++)
+	for (int i = 0; i < size; i++)
 	{
 		years[i]=0;
 	}
