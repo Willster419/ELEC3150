@@ -83,11 +83,11 @@ int size(char temp[])
 //returns the size of the character array of characters that are in use
 int size(int temp[])
 {
-	int tempp = 0;
-	while(temp[tempp] !=0 )//while the value at that index is not null
+	int tempp = sizeof (temp);
+	/*while(temp[tempp] !=0 )//while the value at that index is not null
 	{
 		tempp++;//incrase the index to find the null value
-	}
+	}*/
 	return tempp;
 }
 
@@ -277,4 +277,11 @@ char dequeue(char (&Q)[5], int size)
 		index++;
 	}
 	return haGadi;
+}
+
+string int2String (int intToConvert)
+{
+ostringstream ossT;
+ossT << intToConvert;
+return ossT.str();
 }

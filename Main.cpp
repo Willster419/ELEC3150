@@ -19,6 +19,9 @@
 //constants
 
 
+//structs and typedefs
+
+
 //method prototypes
 
 
