@@ -12,6 +12,7 @@
 #include <ctime>
 #include "LabAPI.h"
 #include <cstdlib>
+#include <fstream>
 
 //defines
 #define YEARS_ARRAY_LENGTH 4
@@ -61,26 +62,20 @@ void sortList();
 //the main entry point of the application
 int main()
 {
-	if (addQBFromFile() == -1) return;
 	int result = QBSize();//0
-	addQB("Kurt","Warner",2000);
-	result = QBSize();//1
-	addQB("Trent2","Dilfer2",2001);
-	result = QBSize();//2
-	addQB("Trent","Dilfer",2002);
-	addQB("Trent","Dilfer",2003);
-	result = getIndex("Trent","Dilfer");//should return 2
+	if (addQBFromFile() == -1) return -1;
+	sortList();
+	result = getIndex("Trent","Dilfer");//should return 1
 	result = getIndex("Trentt","Dilfer");//should return -1
 	qb_t *answer = search("Trent","Dilfer");
 	answer = search(1,true);
-	answer = search(2000,false);
+	answer = search(2006,false);
 	printList();//prints all of them
 	printList(answer);//prints the winner of 2000 Kurt
-	result = deleteQB("Trent2","Dilfer2");//should be 1
+	result = deleteQB("Trent","Dilfer");//should be 1
 	result = deleteQB("Trent2","Dilfer2");//should be -1
 	result = deleteQB(1);//should be 1
-	addQB("Brent2","Bilfer2",2001);
-	result = QBSize();//2
+	result = QBSize();//9
 	printList();
 	sortList();
 	printList();
@@ -141,17 +136,10 @@ int addQB(string fName, string lName, int year)
 				//just add the year and pluz the wins
 				temp->numWins++;
 				addYear(temp->years,YEARS_ARRAY_LENGTH,year);
-				break;
+				return 1;
 			}
 			temp = temp->next;
 		}
-		if ((temp->firstName == fName) && (temp->lastName == lName))
-			{
-				//just add the year and pluz the wins
-				temp->numWins++;
-				addYear(temp->years,YEARS_ARRAY_LENGTH,year);
-				return 1;
-			}
 		temp->type = other_T;
 		temp->next = new qb_t;
 		qb_t *theRealNext = temp->next;
@@ -173,8 +161,43 @@ int addQB(string fName, string lName, int year)
 //-1 indicates error
 int addQBFromFile()
 {
-	ifstream theFile;
-
+	ifstream theFile ("Lab 6_QB_List.txt");
+	string line;
+	string tempArray[3];
+	int i = 0;
+	if (theFile.is_open())
+	{
+		while (getline(theFile,line))
+		{
+			stringstream parser(line);
+			i=0;
+			while(parser.good())
+			{
+				parser >> tempArray[i];
+				i++;
+			}
+			string fName = tempArray[0];
+			string lName = tempArray[1];
+			string year = tempArray[2];
+			char convert[420];
+			for (int k = 0; k < year.size(); k++)
+			{
+				convert[k] = year[k];
+			}
+			sscanf(convert,"%d",&i);
+			addQB(fName,lName,i);
+		}
+		theFile.close();
+		return 0;
+	}
+	/*ofstream myfile ("example.txt");
+	if (myfile.is_open())
+  {
+    myfile << "This is a line.\n";
+    myfile << "This is another line.\n";
+    myfile.close();
+  }
+  else cout << "Unable to open file";*/
 	return -1;
 }
 
@@ -367,7 +390,7 @@ string getAllWins(int *yearsWon, int size)
 	{
 		o << yearsWon[i];
 		int temp = yearsWon[i+1];
-		if (temp == 0) break;
+		if (temp == 0 || temp == -1) break;
 		o << ", ";
 	}
 	return o.str();
@@ -615,5 +638,72 @@ qb_t* search(int year, bool yearOrNumWinz)
 //sorts the list using bubbleSort
 void sortList()
 {
+	bool sorted = false;
+	int size2 = QBSize();
+	int sizePart2 = size2;
+	//detach the list
+	qb_t *temp = master;
+	temp->previous->next = NULL;
+	temp->previous = NULL;
+	while (!sorted)
+	{
+		sorted = true;
+		for (qb_t *te = master; te != NULL; te = te->next)
+		{
+			if (te->next != NULL)
+			{
+			char current = te->lastName[0];
+			char next = te->next->lastName[0];
+			if (current == next)
+			{
+				current = te->firstName[0];
+				next = te->next->firstName[0];
+			}
+			if (current > next)
+			{
+				//swap
+				sorted = false;
+				if(te->type == first_T)
+				{
+					//special case of first one
 
+				}
+				else if (te->type == last_T)
+				{
+					//special case of last one
+
+				}
+				else
+				{
+
+				}
+				/*
+				//backup and break the links for the next and previous not being flipped
+				qb_t *previous = te->previous;
+				if (previous != NULL) previous->next = NULL;
+				qb_t *next = te->next->next;
+				if (next != NULL) next->previous = NULL;
+				qb_t *moving = te->next;
+				moving->next = NULL;
+				moving->previous = NULL;
+				te->previous = NULL;
+				te->next = NULL;
+				//relink nexts
+				if (previous != NULL) previous->next = moving;
+				moving->next=te;
+				te->next=next;
+				//relink previouses
+				if (next != NULL) next->previous = te;
+				te->previous = moving;
+				moving->previous=previous;*/
+			}
+			}
+		}
+	}
+	//relink the lists and declare which is which in terms of type
+
+	for (qb_t *te = master; te != NULL; te = te->next)
+		{
+			
+		}
 }
