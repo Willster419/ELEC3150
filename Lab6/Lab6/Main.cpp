@@ -67,7 +67,11 @@ int main()
 	print();
 	print("the initial size of the list is",result);
 	print("adding from file...");
-	if (addQBFromFile() == -1) return -1;
+	if (addQBFromFile() == -1)
+		{
+			print("failed to load file");
+			return -1;
+	}
 	printList();
 	run_complete(task_done);
 	print();
