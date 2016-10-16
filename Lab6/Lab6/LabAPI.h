@@ -115,12 +115,12 @@ string swapString (string stringToSwap)
 	return temp;
 }
 
-void run_complete()
+void run_complete( string message = "Run Complete, press enter to continue...")
 {
 	string temps;
 	cin.clear();
 	string temp;
-	print("Run Complete, press enter to continue...");
+	print(message);
 	getline(cin,temps);
 	cin.clear();
 }

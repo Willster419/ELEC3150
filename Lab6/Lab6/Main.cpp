@@ -18,7 +18,7 @@
 #define YEARS_ARRAY_LENGTH 4
 
 //constants
-
+const string task_done = "done with task, press enter to continue..";
 
 //other definitions
 using namespace std;
@@ -62,26 +62,70 @@ void sortList();
 //the main entry point of the application
 int main()
 {
+	print ("Lab 6 - Double Linked List");
 	int result = QBSize();//0
+	print();
+	print("the initial size of the list is",result);
+	print("adding from file...");
 	if (addQBFromFile() == -1) return -1;
 	printList();
-	sortList();
-	printList();
+	run_complete(task_done);
+	print();
+	print("searching for index of 'Trent Dilfer'...");
 	result = getIndex("Trent","Dilfer");//should return 1
+	print("index is " + int2String(result) + " , meaning sucess");
+	print("searching for index of 'Trentt Dilfer'...");
 	result = getIndex("Trentt","Dilfer");//should return -1
+	print("index is " + int2String(result) + " , meaning it does not exist");
+	run_complete(task_done);
+	print();
+	print("searching and printing information for 'Trent Dilfer'...");
 	qb_t *answer = search("Trent","Dilfer");
+	if (answer != NULL)printList(answer);
+	print();
+	print("searching and printing information for QB with 1 wins...");
 	answer = search(1,true);
+	if (answer != NULL)printList(answer);
+	print();
+	print("searching and printing information for QB winner of 2006...");
 	answer = search(2006,false);
-	printList();//prints all of them
-	printList(answer);//prints the winner of 2006, Ben R
+	if (answer != NULL)printList(answer);
+	print();
+	print("searching and printing information for QB winner of 2020 (which does not exist)...");
+	answer = search(2020,false);
+	if (answer != NULL)printList(answer);
+	else print("not found");
+	print();
+	run_complete(task_done);
+	print("Deleting QB 'Trent Dilfer'...");
 	result = deleteQB("Trent","Dilfer");//should be 1
+	print("result was " + int2String(result) + " (sucess)");
+	print();
+	print("Deleting QB 'Trent2 Dilfer2' (does not exist)...");
 	result = deleteQB("Trent2","Dilfer2");//should be -1
-	result = addQB("Trent","Dilfer",2001);
+	print("result was " + int2String(result) + " (cound not find it)");
+	print();
+	print("Deleting QB @ index 4...");
 	result = deleteQB(4);//should be 1
-	result = QBSize();//
+	print("result was " + int2String(result) + " (sucess)");
+	print();
+	run_complete(task_done);
+	print("adding 'Trent Dilfer' to the list...");
+	result = addQB("Trent","Dilfer",2001);
+	print("result was " + int2String(result) + " (sucess)");
+	print();
+	result = QBSize();
+	print("by the way, the length of the list is",result);
+	run_complete(task_done);
+	print();
+	print("here is the list before sorting");
 	printList();
+	print();
+	print("here is the list after sorting");
 	sortList();
 	printList();
+	run_complete(task_done);
+	print("recursivly deleting the list...");
 	deleteAll(master);
 	return 0;
 }
@@ -246,12 +290,15 @@ void printList(qb_t *customList)
 	if (customList == NULL || customList == 0) return;
 	qb_t *theNext = customList;
 	print("search results:");
+	int size = QBSize(customList);
+	int i = 0;
 	while (true)
 	{
 		string winz = int2String(theNext->numWins);
 		print(theNext->firstName + " " + theNext->lastName + ", " + winz + " wins in " + getAllWins(theNext->years,YEARS_ARRAY_LENGTH));
 		theNext = theNext->next;
-		if (theNext == NULL)
+		i++;
+		if (theNext == NULL || i == size)
 		{
 			break;
 		}
