@@ -64,18 +64,21 @@ int main()
 {
 	int result = QBSize();//0
 	if (addQBFromFile() == -1) return -1;
+	printList();
 	sortList();
+	printList();
 	result = getIndex("Trent","Dilfer");//should return 1
 	result = getIndex("Trentt","Dilfer");//should return -1
 	qb_t *answer = search("Trent","Dilfer");
 	answer = search(1,true);
 	answer = search(2006,false);
 	printList();//prints all of them
-	printList(answer);//prints the winner of 2000 Kurt
+	printList(answer);//prints the winner of 2006, Ben R
 	result = deleteQB("Trent","Dilfer");//should be 1
 	result = deleteQB("Trent2","Dilfer2");//should be -1
-	result = deleteQB(1);//should be 1
-	result = QBSize();//9
+	result = addQB("Trent","Dilfer",2001);
+	result = deleteQB(4);//should be 1
+	result = QBSize();//
 	printList();
 	sortList();
 	printList();
@@ -153,6 +156,7 @@ int addQB(string fName, string lName, int year)
 		theRealNext->next = master;
 		theRealNext->previous = temp;
 		master->previous = theRealNext;
+		return 1;
 	}
 	return -1;
 }
@@ -190,14 +194,6 @@ int addQBFromFile()
 		theFile.close();
 		return 0;
 	}
-	/*ofstream myfile ("example.txt");
-	if (myfile.is_open())
-  {
-    myfile << "This is a line.\n";
-    myfile << "This is another line.\n";
-    myfile.close();
-  }
-  else cout << "Unable to open file";*/
 	return -1;
 }
 
@@ -652,12 +648,27 @@ void sortList()
 		{
 			if (te->next != NULL)
 			{
-			char current = te->lastName[0];
-			char next = te->next->lastName[0];
-			if (current == next)
+			int i = 0;
+			char current = te->lastName[i];
+			char next = te->next->lastName[i];
+			while (te->lastName[i] == te->next->lastName[i])
 			{
-				current = te->firstName[0];
-				next = te->next->firstName[0];
+				i++;
+				if ((i == te->lastName.size()) || (i == te->next->lastName.size()))
+				{
+					int j = 0;
+					current = te->firstName[j];
+					next = te->next->firstName[j];
+					while (te->firstName[j] == te->next->firstName[j])
+					{
+						j++;
+						current = te->firstName[j];
+						next = te->next->firstName[j];
+					}
+					break;
+				}
+				current = te->lastName[i];
+				next = te->next->lastName[i];
 			}
 			if (current > next)
 			{
@@ -666,44 +677,71 @@ void sortList()
 				if(te->type == first_T)
 				{
 					//special case of first one
-
+					qb_t *other = te->next;
+					qb_t *next = te->next->next;
+					//set type orders
+					other->type = first_T;
+					te->type = other_T;
+					//create next links
+					other->next = te;
+					te->next = next;
+					//create previous links
+					next->previous = te;
+					te->previous = other;
+					other->previous = NULL;
+					master = other;
 				}
-				else if (te->type == last_T)
+				else if ((te->type == last_T) || te->next->next == NULL)
 				{
 					//special case of last one
-
+					qb_t* other = te->next;
+					qb_t* prev = te->previous;
+					//set orders
+					other->type = other_T;
+					te->type = last_T;
+					//create next links
+					prev->next = other;
+					te->next = NULL;
+					other->next = te;
+					//create previous links
+					other->previous = prev;
+					te->previous = other;
 				}
 				else
 				{
-
-				}
-				/*
-				//backup and break the links for the next and previous not being flipped
 				qb_t *previous = te->previous;
-				if (previous != NULL) previous->next = NULL;
+				previous->next = NULL;
 				qb_t *next = te->next->next;
-				if (next != NULL) next->previous = NULL;
+				next->previous = NULL;
 				qb_t *moving = te->next;
 				moving->next = NULL;
 				moving->previous = NULL;
 				te->previous = NULL;
 				te->next = NULL;
 				//relink nexts
-				if (previous != NULL) previous->next = moving;
+				previous->next = moving;
 				moving->next=te;
 				te->next=next;
 				//relink previouses
-				if (next != NULL) next->previous = te;
+				next->previous = te;
 				te->previous = moving;
-				moving->previous=previous;*/
+				moving->previous=previous;
+				}
+				
+				//backup and break the links for the next and previous not being flipped
+				
 			}
 			}
 		}
 	}
 	//relink the lists and declare which is which in terms of type
-
-	for (qb_t *te = master; te != NULL; te = te->next)
+	qb_t *te2 = master;
+	te2->type = first_T;
+	for ( ;te2->next != NULL; te2 = te2->next)
 		{
-			
+			te2->next->type = other_T;
 		}
+	te2->type = last_T;
+	te2->next=master;
+	master->previous = te2;
 }
