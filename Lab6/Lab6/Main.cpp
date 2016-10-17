@@ -109,8 +109,12 @@ int main()
 	result = deleteQB("Trent2","Dilfer2");//should be -1
 	print("result was " + int2String(result) + " (cound not find it)");
 	print();
-	print("Deleting QB @ index 4...");
-	result = deleteQB(4);//should be 1
+	print("Deleting QB @ last index...");
+	result = deleteQB(QBSize()-1);//should be 1
+	print("result was " + int2String(result) + " (sucess)");
+	print();
+	print("Deleting QB @ index 0 (master)...");
+	result = deleteQB(0);//should be 1
 	print("result was " + int2String(result) + " (sucess)");
 	print();
 	run_complete(task_done);
@@ -331,10 +335,35 @@ int deleteQB(string fN, string lN)
 	{
 		if ((theNext->firstName == fN) && (theNext->lastName == lN))
 		{
-			//link the previous one over to the next one adn vice versa for previous
-			theNext->previous->next = theNext->next;
-			theNext->next->previous = theNext->previous;
-			delete (theNext);
+			if (theNext->type == first_T)
+			{
+				//special case is head
+				qb_t *newMaster = new qb_t;
+				newMaster = theNext->next;
+				newMaster->next = theNext->next->next;
+				newMaster->previous = theNext->previous;
+				master = newMaster;
+				master->type = first_T;
+				newMaster->previous->next = newMaster;
+				delete(theNext);
+			}
+			else if (theNext->type == last_T)
+			{
+				//special case is last
+				//link the previous one over to the next one adn vice versa for previous
+				theNext->previous->next = theNext->next;
+				theNext->next->previous = theNext->previous;
+				//set the type of the new last one to be the last one now
+				theNext->previous->type = last_T;
+				delete (theNext);
+			}
+			else
+			{
+				//link the previous one over to the next one adn vice versa for previous
+				theNext->previous->next = theNext->next;
+				theNext->next->previous = theNext->previous;
+				delete (theNext);
+			}
 			return 1;
 		}
 		theNext = theNext->next;
