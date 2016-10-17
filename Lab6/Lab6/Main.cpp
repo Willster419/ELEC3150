@@ -2,7 +2,7 @@
 // Willard Wider               //
 // 10/13/16                    //
 // Lab 6                       //
-// Last Modified 10/15/16      //
+// Last Modified 10/16/16      //
 /////////////////////////////////
 
 //includes
@@ -140,10 +140,8 @@ int addQB(string fName, string lName, int year)
 {
 	if (master == NULL)
 	{
-		//first entry
+		//first entry in the linked list. so, created it
 		master = new qb_t;
-		//qb_t first;
-		
 		(*master).firstName=fName;
 		(*master).lastName=lName;
 		(*master).numWins=1;
@@ -159,7 +157,7 @@ int addQB(string fName, string lName, int year)
 	}
 	else if (QBSize() == 1 && fName != master->firstName && lName != master->lastName)
 	{
-		//second entry
+		//second entry in the list, make it and link it to the first
 		master->next = new qb_t;
 		qb_t *temp = master->next;
 		(*temp).firstName=fName;
@@ -176,6 +174,7 @@ int addQB(string fName, string lName, int year)
 	}
 	else
 	{
+		//every other added element to the list
 		//traverse to the last element in the list
 		//create and link
 		qb_t *temp = master;
@@ -192,8 +191,8 @@ int addQB(string fName, string lName, int year)
 			temp = temp->next;
 		}
 		temp->type = other_T;
-		temp->next = new qb_t;
-		qb_t *theRealNext = temp->next;
+		temp->next = new qb_t;//declare the memory space for the QB
+		qb_t *theRealNext = temp->next;//derefrence and create the QB
 		(*theRealNext).firstName=fName;
 		(*theRealNext).lastName=lName;
 		(*theRealNext).numWins=1;
@@ -203,7 +202,7 @@ int addQB(string fName, string lName, int year)
 		(*theRealNext).type=last_T;
 		theRealNext->next = master;
 		theRealNext->previous = temp;
-		master->previous = theRealNext;
+		master->previous = theRealNext;//link it up
 		return 1;
 	}
 	return -1;
@@ -221,10 +220,12 @@ int addQBFromFile()
 	{
 		while (getline(theFile,line))
 		{
-			stringstream parser(line);
+			//while there is a line to grab from the file
+			stringstream parser(line);//grab the line and save it to a string
 			i=0;
 			while(parser.good())
 			{
+				//take each part of the string and split it into an array based on the delimiter of space
 				parser >> tempArray[i];
 				i++;
 			}
@@ -234,9 +235,9 @@ int addQBFromFile()
 			char convert[420];
 			for (int k = 0; k < year.size(); k++)
 			{
-				convert[k] = year[k];
+				convert[k] = year[k];//convert the string to an actual character array
 			}
-			sscanf(convert,"%d",&i);
+			sscanf(convert,"%d",&i);//convert the character array to an int
 			addQB(fName,lName,i);
 		}
 		theFile.close();
@@ -255,12 +256,14 @@ int getIndex(string fN, string lN)
 	{
 		if ((temp->firstName == fN) && (temp->lastName == lN))
 		{
+			//if the first and last name match, return the index number
 			return index;
 		}
 		temp = temp->next;
 		index++;
 		if (temp->type == first_T)
 		{
+			//break if we are back to the first item in the list
 			break;
 		}
 	}
@@ -270,8 +273,7 @@ int getIndex(string fN, string lN)
 //prints the entire list so far
 void printList()
 {
-	//int length = lengthQB();
-	//if (length == 0 || length == -1) return;
+	//print each element in the master linked list
 	if (master == NULL || master == 0) return;
 	qb_t *theNext = master;
 	while (true)
@@ -289,8 +291,7 @@ void printList()
 //prints a custom qb list
 void printList(qb_t *customList)
 {
-	//int length = lengthQB();
-	//if (length == 0 || length == -1) return;
+	//print each element in the custom linked list
 	if (customList == NULL || customList == 0) return;
 	qb_t *theNext = customList;
 	print("search results:");
@@ -330,6 +331,7 @@ int deleteQB(string fN, string lN)
 	{
 		if ((theNext->firstName == fN) && (theNext->lastName == lN))
 		{
+			//link the previous one over to the next one adn vice versa for previous
 			theNext->previous->next = theNext->next;
 			theNext->next->previous = theNext->previous;
 			delete (theNext);
@@ -406,22 +408,26 @@ int QBSize(qb_t *customList)
 	return count;
 }
 
+//adds another year to the array of the QB's yearsWon array
 void addYear(int *years, int size, int year)
 {
 	for (int i = 0; i < YEARS_ARRAY_LENGTH; i++)
 	{
-		if (years[i]==0)
+		//traverse the years array
+		if (years[i]==0)//if this index locatio of the years array is null
 			{
+				//set it equal to this one's year
 				years[i] = year;
 				break;
 			}
 		else
 		{
-
+			//do nothing
 		}
 	}
 }
 
+//parses the years array for a QB by setting each index value to null (0)
 void initYearsArray(int *years, int size)
 {
 	for (int i = 0; i < size; i++)
@@ -430,12 +436,14 @@ void initYearsArray(int *years, int size)
 	}
 }
 
+//used in the print statement, gets all wins of a QB from the yearsWonList
+//returns a formatted string with each year that the QB won
 string getAllWins(int *yearsWon, int size)
 {
 	ostringstream o;
 	for (int i = 0; i < size; i++)
 	{
-		o << yearsWon[i];
+		o << yearsWon[i];//append the year won to the stringStream
 		int temp = yearsWon[i+1];
 		if (temp == 0 || temp == -1) break;
 		o << ", ";
@@ -688,25 +696,30 @@ void sortList()
 	bool sorted = false;
 	int size2 = QBSize();
 	int sizePart2 = size2;
-	//detach the list
+	//detach the list to allow for null checking, and prevent any circular re-refrencing
 	qb_t *temp = master;
 	temp->previous->next = NULL;
 	temp->previous = NULL;
 	while (!sorted)
 	{
+		//use bubble sort algorithem tosort the linked list
 		sorted = true;
 		for (qb_t *te = master; te != NULL; te = te->next)
 		{
 			if (te->next != NULL)
 			{
+				//check to make sure it is a valid element
 			int i = 0;
+			//save the fist character of the last name of the current and next QB element to compare for sorting
 			char current = te->lastName[i];
 			char next = te->next->lastName[i];
 			while (te->lastName[i] == te->next->lastName[i])
 			{
+				//if the characters are equal, use a for loop to traverse down the string for each character
 				i++;
 				if ((i == te->lastName.size()) || (i == te->next->lastName.size()))
 				{
+					//if the last names are the same, sort by first name. same concept
 					int j = 0;
 					current = te->firstName[j];
 					next = te->next->firstName[j];
@@ -760,6 +773,7 @@ void sortList()
 				}
 				else
 				{
+					//regular case
 				qb_t *previous = te->previous;
 				previous->next = NULL;
 				qb_t *next = te->next->next;
