@@ -68,9 +68,9 @@ int main()
 	print("the initial size of the list is",result);
 	print("adding from file...");
 	if (addQBFromFile() == -1)
-		{
-			print("failed to load file");
-			return -1;
+	{
+		print("failed to load file");
+		return -1;
 	}
 	printList();
 	run_complete(task_done);
@@ -280,7 +280,7 @@ void printList()
 	{
 		string winz = int2String(theNext->numWins);
 		print(theNext->firstName + " " + theNext->lastName + " won " + winz + " times: " + getAllWins(theNext->years,YEARS_ARRAY_LENGTH));
-	theNext = theNext->next;
+		theNext = theNext->next;
 		if (theNext->type == first_T)
 		{
 			break;
@@ -337,7 +337,7 @@ int deleteQB(string fN, string lN)
 			delete (theNext);
 			return 1;
 		}
-	theNext = theNext->next;
+		theNext = theNext->next;
 		if (theNext->type == first_T)
 		{
 			break;
@@ -360,8 +360,8 @@ int deleteQB(int index)
 			deleteQB(theNext->firstName,theNext->lastName);
 			return 1;
 		}
-	theNext = theNext->next;
-	i++;
+		theNext = theNext->next;
+		i++;
 		if (theNext->type == first_T)
 		{
 			break;
@@ -415,11 +415,11 @@ void addYear(int *years, int size, int year)
 	{
 		//traverse the years array
 		if (years[i]==0)//if this index locatio of the years array is null
-			{
-				//set it equal to this one's year
-				years[i] = year;
-				break;
-			}
+		{
+			//set it equal to this one's year
+			years[i] = year;
+			break;
+		}
 		else
 		{
 			//do nothing
@@ -535,157 +535,157 @@ qb_t* search(int year, bool yearOrNumWinz)
 	{
 		//searching for numWinz
 		qb_t* starter = NULL;
-	qb_t *tempp = master;
-	bool created = false;
-	while (true)
-	{
-		if (tempp->numWins == year)
+		qb_t *tempp = master;
+		bool created = false;
+		while (true)
 		{
-			if (!created)
+			if (tempp->numWins == year)
 			{
-				//if first time in the list
-				starter = new qb_t;
-				(*starter).firstName = (*tempp).firstName;
-				(*starter).lastName = (*tempp).lastName;
-				(*starter).numWins = (*tempp).numWins;
-				(*starter).type = first_T;
-				for (int i = 0; i < YEARS_ARRAY_LENGTH; i++)
+				if (!created)
 				{
-					(*starter).years[i] = (*tempp).years[i];
+					//if first time in the list
+					starter = new qb_t;
+					(*starter).firstName = (*tempp).firstName;
+					(*starter).lastName = (*tempp).lastName;
+					(*starter).numWins = (*tempp).numWins;
+					(*starter).type = first_T;
+					for (int i = 0; i < YEARS_ARRAY_LENGTH; i++)
+					{
+						(*starter).years[i] = (*tempp).years[i];
+					}
+					(*starter).next = NULL;
+					created = true;
 				}
-				(*starter).next = NULL;
-				created = true;
+				else if (QBSize(starter) == 1)
+				{
+					//just keep making the list
+					starter->next = new qb_t;
+					starter->previous = starter->next;
+					qb_t *ttemp = starter->next;
+					(*ttemp).firstName = (*tempp).firstName;
+					(*ttemp).lastName = (*tempp).lastName;
+					(*ttemp).numWins = (*tempp).numWins;
+					(*ttemp).type = last_T;
+					ttemp->next = starter;
+					ttemp->previous = starter;
+					for (int i = 0; i < YEARS_ARRAY_LENGTH; i++)
+					{
+						(*ttemp).years[i] = (*tempp).years[i];
+					}
+				}
+				else
+				{
+					//same as above, but this one is inserting
+					//traverse to the last element in the list
+					//create and link
+					qb_t *ttemp = starter;
+					while (ttemp->type != last_T)
+					{
+						ttemp = ttemp->next;
+					}
+					ttemp->type = other_T;
+					ttemp->next = new qb_t;
+					qb_t *temp = ttemp->next;
+					(*temp).firstName = (*tempp).firstName;
+					(*temp).lastName = (*tempp).lastName;
+					(*temp).numWins = (*tempp).numWins;
+					(*temp).type = last_T;
+					for (int i = 0; i < YEARS_ARRAY_LENGTH; i++)
+					{
+						(*temp).years[i] = (*tempp).years[i];
+					}
+					ttemp->next=temp;
+					temp->previous=ttemp;
+					temp->next=starter;
+				}
 			}
-			else if (QBSize(starter) == 1)
+			tempp = tempp->next;
+			if (tempp->type == first_T)
 			{
-				//just keep making the list
-				starter->next = new qb_t;
-				starter->previous = starter->next;
-				qb_t *ttemp = starter->next;
-				(*ttemp).firstName = (*tempp).firstName;
-				(*ttemp).lastName = (*tempp).lastName;
-				(*ttemp).numWins = (*tempp).numWins;
-				(*ttemp).type = last_T;
-				ttemp->next = starter;
-				ttemp->previous = starter;
-				for (int i = 0; i < YEARS_ARRAY_LENGTH; i++)
-				{
-					(*ttemp).years[i] = (*tempp).years[i];
-				}
-			}
-			else
-			{
-				//same as above, but this one is inserting
-				//traverse to the last element in the list
-				//create and link
-				qb_t *ttemp = starter;
-				while (ttemp->type != last_T)
-				{
-					ttemp = ttemp->next;
-				}
-				ttemp->type = other_T;
-				ttemp->next = new qb_t;
-				qb_t *temp = ttemp->next;
-				(*temp).firstName = (*tempp).firstName;
-				(*temp).lastName = (*tempp).lastName;
-				(*temp).numWins = (*tempp).numWins;
-				(*temp).type = last_T;
-				for (int i = 0; i < YEARS_ARRAY_LENGTH; i++)
-				{
-					(*temp).years[i] = (*tempp).years[i];
-				}
-				ttemp->next=temp;
-				temp->previous=ttemp;
-				temp->next=starter;
+				//end of the list
+				break;
 			}
 		}
-		tempp = tempp->next;
-		if (tempp->type == first_T)
-		{
-			//end of the list
-			break;
-		}
-	}
-	return starter;
+		return starter;
 	}
 	else
 	{
-	//searching for year
-	qb_t* starter = NULL;
-	qb_t *tempp = master;
-	bool created = false;
-	while (true)
-	{
-		for (int i = 0; i < YEARS_ARRAY_LENGTH; i++)
+		//searching for year
+		qb_t* starter = NULL;
+		qb_t *tempp = master;
+		bool created = false;
+		while (true)
 		{
-		if (tempp->years[i] == year)
-		{
-			if (!created)
+			for (int i = 0; i < YEARS_ARRAY_LENGTH; i++)
 			{
-				//if first time in the list
-				starter = new qb_t;
-				(*starter).firstName = (*tempp).firstName;
-				(*starter).lastName = (*tempp).lastName;
-				(*starter).numWins = (*tempp).numWins;
-				(*starter).type = first_T;
-				for (int i = 0; i < YEARS_ARRAY_LENGTH; i++)
+				if (tempp->years[i] == year)
 				{
-					(*starter).years[i] = (*tempp).years[i];
+					if (!created)
+					{
+						//if first time in the list
+						starter = new qb_t;
+						(*starter).firstName = (*tempp).firstName;
+						(*starter).lastName = (*tempp).lastName;
+						(*starter).numWins = (*tempp).numWins;
+						(*starter).type = first_T;
+						for (int i = 0; i < YEARS_ARRAY_LENGTH; i++)
+						{
+							(*starter).years[i] = (*tempp).years[i];
+						}
+						(*starter).next = NULL;
+					}
+					else if (QBSize(starter) == 1)
+					{
+						//just keep making the list
+						starter->next = new qb_t;
+						starter->previous = starter->next;
+						qb_t *ttemp = starter->next;
+						(*ttemp).firstName = (*tempp).firstName;
+						(*ttemp).lastName = (*tempp).lastName;
+						(*ttemp).numWins = (*tempp).numWins;
+						(*ttemp).type = last_T;
+						ttemp->next = starter;
+						ttemp->previous = starter;
+						for (int i = 0; i < YEARS_ARRAY_LENGTH; i++)
+						{
+							(*ttemp).years[i] = (*tempp).years[i];
+						}
+					}
+					else
+					{
+						//same as above, but this one is inserting
+						//traverse to the last element in the list
+						//create and link
+						qb_t *ttemp = starter;
+						while (ttemp->type != last_T)
+						{
+							ttemp = ttemp->next;
+						}
+						ttemp->type = other_T;
+						ttemp->next = new qb_t;
+						qb_t *temp = ttemp->next;
+						(*temp).firstName = (*tempp).firstName;
+						(*temp).lastName = (*tempp).lastName;
+						(*temp).numWins = (*tempp).numWins;
+						(*temp).type = last_T;
+						for (int i = 0; i < YEARS_ARRAY_LENGTH; i++)
+						{
+							(*temp).years[i] = (*tempp).years[i];
+						}
+						ttemp->next=temp;
+						temp->previous=ttemp;
+						temp->next=starter;
+					}
 				}
-				(*starter).next = NULL;
 			}
-			else if (QBSize(starter) == 1)
+			tempp = tempp->next;
+			if (tempp->type == first_T)
 			{
-				//just keep making the list
-				starter->next = new qb_t;
-				starter->previous = starter->next;
-				qb_t *ttemp = starter->next;
-				(*ttemp).firstName = (*tempp).firstName;
-				(*ttemp).lastName = (*tempp).lastName;
-				(*ttemp).numWins = (*tempp).numWins;
-				(*ttemp).type = last_T;
-				ttemp->next = starter;
-				ttemp->previous = starter;
-				for (int i = 0; i < YEARS_ARRAY_LENGTH; i++)
-				{
-					(*ttemp).years[i] = (*tempp).years[i];
-				}
-			}
-			else
-			{
-				//same as above, but this one is inserting
-				//traverse to the last element in the list
-				//create and link
-				qb_t *ttemp = starter;
-				while (ttemp->type != last_T)
-				{
-					ttemp = ttemp->next;
-				}
-				ttemp->type = other_T;
-				ttemp->next = new qb_t;
-				qb_t *temp = ttemp->next;
-				(*temp).firstName = (*tempp).firstName;
-				(*temp).lastName = (*tempp).lastName;
-				(*temp).numWins = (*tempp).numWins;
-				(*temp).type = last_T;
-				for (int i = 0; i < YEARS_ARRAY_LENGTH; i++)
-				{
-					(*temp).years[i] = (*tempp).years[i];
-				}
-				ttemp->next=temp;
-				temp->previous=ttemp;
-				temp->next=starter;
+				//end of the list
+				break;
 			}
 		}
-	}
-		tempp = tempp->next;
-		if (tempp->type == first_T)
-		{
-			//end of the list
-			break;
-		}
-	}
-	return starter;
+		return starter;
 	}
 	return NULL;
 }
@@ -709,93 +709,91 @@ void sortList()
 			if (te->next != NULL)
 			{
 				//check to make sure it is a valid element
-			int i = 0;
-			//save the fist character of the last name of the current and next QB element to compare for sorting
-			char current = te->lastName[i];
-			char next = te->next->lastName[i];
-			while (te->lastName[i] == te->next->lastName[i])
-			{
-				//if the characters are equal, use a for loop to traverse down the string for each character
-				i++;
-				if ((i == te->lastName.size()) || (i == te->next->lastName.size()))
+				int i = 0;
+				//save the fist character of the last name of the current and next QB element to compare for sorting
+				char current = te->lastName[i];
+				char next = te->next->lastName[i];
+				while (te->lastName[i] == te->next->lastName[i])
 				{
-					//if the last names are the same, sort by first name. same concept
-					int j = 0;
-					current = te->firstName[j];
-					next = te->next->firstName[j];
-					while (te->firstName[j] == te->next->firstName[j])
+					//if the characters are equal, use a for loop to traverse down the string for each character
+					i++;
+					if ((i == te->lastName.size()) || (i == te->next->lastName.size()))
 					{
-						j++;
+						//if the last names are the same, sort by first name. same concept
+						int j = 0;
 						current = te->firstName[j];
 						next = te->next->firstName[j];
+						while (te->firstName[j] == te->next->firstName[j])
+						{
+							j++;
+							current = te->firstName[j];
+							next = te->next->firstName[j];
+						}
+						break;
 					}
-					break;
+					current = te->lastName[i];
+					next = te->next->lastName[i];
 				}
-				current = te->lastName[i];
-				next = te->next->lastName[i];
-			}
-			if (current > next)
-			{
-				//swap
-				sorted = false;
-				if(te->type == first_T)
+				if (current > next)
 				{
-					//special case of first one
-					qb_t *other = te->next;
-					qb_t *next = te->next->next;
-					//set type orders
-					other->type = first_T;
-					te->type = other_T;
-					//create next links
-					other->next = te;
-					te->next = next;
-					//create previous links
-					next->previous = te;
-					te->previous = other;
-					other->previous = NULL;
-					master = other;
+					//swap
+					sorted = false;
+					if(te->type == first_T)
+					{
+						//special case of first one
+						qb_t *other = te->next;
+						qb_t *next = te->next->next;
+						//set type orders
+						other->type = first_T;
+						te->type = other_T;
+						//create next links
+						other->next = te;
+						te->next = next;
+						//create previous links
+						next->previous = te;
+						te->previous = other;
+						other->previous = NULL;
+						master = other;
+					}
+					else if ((te->type == last_T) || te->next->next == NULL)
+					{
+						//special case of last one
+						qb_t* other = te->next;
+						qb_t* prev = te->previous;
+						//set orders
+						other->type = other_T;
+						te->type = last_T;
+						//create next links
+						prev->next = other;
+						te->next = NULL;
+						other->next = te;
+						//create previous links
+						other->previous = prev;
+						te->previous = other;
+					}
+					else
+					{
+						//regular case
+						qb_t *previous = te->previous;
+						previous->next = NULL;
+						qb_t *next = te->next->next;
+						next->previous = NULL;
+						qb_t *moving = te->next;
+						moving->next = NULL;
+						moving->previous = NULL;
+						te->previous = NULL;
+						te->next = NULL;
+						//relink nexts
+						previous->next = moving;
+						moving->next=te;
+						te->next=next;
+						//relink previouses
+						next->previous = te;
+						te->previous = moving;
+						moving->previous=previous;
+					}
+					//backup and break the links for the next and previous not being flipped
 				}
-				else if ((te->type == last_T) || te->next->next == NULL)
-				{
-					//special case of last one
-					qb_t* other = te->next;
-					qb_t* prev = te->previous;
-					//set orders
-					other->type = other_T;
-					te->type = last_T;
-					//create next links
-					prev->next = other;
-					te->next = NULL;
-					other->next = te;
-					//create previous links
-					other->previous = prev;
-					te->previous = other;
-				}
-				else
-				{
-					//regular case
-				qb_t *previous = te->previous;
-				previous->next = NULL;
-				qb_t *next = te->next->next;
-				next->previous = NULL;
-				qb_t *moving = te->next;
-				moving->next = NULL;
-				moving->previous = NULL;
-				te->previous = NULL;
-				te->next = NULL;
-				//relink nexts
-				previous->next = moving;
-				moving->next=te;
-				te->next=next;
-				//relink previouses
-				next->previous = te;
-				te->previous = moving;
-				moving->previous=previous;
-				}
-				
-				//backup and break the links for the next and previous not being flipped
-				
-			}
 			}
 		}
 	}
@@ -803,9 +801,9 @@ void sortList()
 	qb_t *te2 = master;
 	te2->type = first_T;
 	for ( ;te2->next != NULL; te2 = te2->next)
-		{
-			te2->next->type = other_T;
-		}
+	{
+		te2->next->type = other_T;
+	}
 	te2->type = last_T;
 	te2->next=master;
 	master->previous = te2;
