@@ -281,7 +281,7 @@ char dequeue(char (&Q)[5], int size)
 
 string int2String (int intToConvert)
 {
-ostringstream ossT;
-ossT << intToConvert;
-return ossT.str();
+	ostringstream ossT;
+	ossT << intToConvert;
+	return ossT.str();
 }
