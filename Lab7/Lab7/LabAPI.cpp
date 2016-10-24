@@ -6,74 +6,96 @@
 // Last Modified 10/24/16      //
 /////////////////////////////////
 
-
+//C library includes
 #include <iostream>
 #include <string>
 #include <sstream>
+#include <ctime>
 #include <cstdlib>
+#include <fstream>
+
+//user includes
 #include "LabAPI.h"
 
+//defines
+
+
+//constants
+
+
+//structs
+
+
+//typedefs
+
+
+//method prototypes
+
+
+//other definitions
 using namespace std;
+ostringstream oss;//extra std::string stream to allow for other types than std::strings to be added to an output
+string swapstring;
 
 //method to simplifing the procedure of printing to the console
-void LabAPI::print(string str)
+void print(string str)
 {
 	cout << str << "\n";
 	oss.str("");
 }
 
 //method to simplifing the procedure of printing to the console
-void LabAPI::print(unsigned char c)
+void print(unsigned char c)
 {
 	cout << c << "\n";
 	oss.str("");
 }
 
 //method to provide a blank space
-void LabAPI::print()
+void print()
 {
 	cout << "" << "\n";
 	oss.str("");
 }
 
-void LabAPI::print(string text, char value)
+void print(string text, char value)
 {
 	cout << text << " " << value << "\n";
 	oss.str("");
 }
 
-void LabAPI::print(string text, int value)
+void print(string text, int value)
 {
 	cout << text << " " << value << "\n";
 	oss.str("");
 }
 
-void LabAPI::printPointer(char *refChar)
+void printPointer(char *refChar)
 {
 	cout << *refChar << "\n";
 	oss.str("");
 }
 
-void LabAPI::printPointer(int *refInt)
+void printPointer(int *refInt)
 {
 	cout << *refInt << "\n";
 	oss.str("");
 }
 
-void LabAPI::printPointer(float *refFloat)
+void printPointer(float *refFloat)
 {
 	cout << *refFloat << "\n";
 	oss.str("");
 }
 
-void LabAPI::printPointer(double *refDub)
+void printPointer(double *refDub)
 {
 	cout << *refDub << "\n";
 	oss.str("");
 }
 
 //returns the size of the character array of characters that are in use
-int LabAPI::size(char temp[])
+int size(char temp[])
 {
 	int tempp = 0;
 	while(temp[tempp] !=0 )//while the value at that index is not null
@@ -84,7 +106,7 @@ int LabAPI::size(char temp[])
 }
 
 //returns the size of the character array of characters that are in use
-int LabAPI::size(int temp[])
+int size(int temp[])
 {
 	int tempp = sizeof (temp);
 	/*while(temp[tempp] !=0 )//while the value at that index is not null
@@ -95,7 +117,7 @@ int LabAPI::size(int temp[])
 }
 
 //returns the size of the character array of characters that are in use
-int LabAPI::size(unsigned char temp[])
+int size(unsigned char temp[])
 {
 	int tempp = 0;
 	while(temp[tempp] !=0 )
@@ -107,7 +129,7 @@ int LabAPI::size(unsigned char temp[])
 
 //swapps all the items of a given array from top and bottom
 //same logic as lab 1
-string LabAPI::swapString (string stringToSwap)
+string swapString (string stringToSwap)
 {
 	string temp = stringToSwap;
 	for (int i = 0; i < stringToSwap.size(); i++)
@@ -118,7 +140,7 @@ string LabAPI::swapString (string stringToSwap)
 	return temp;
 }
 
-void LabAPI::run_complete( string message = "Run Complete, press enter to continue...")
+void run_complete( string message = "Run Complete, press enter to continue...")
 {
 	string temps;
 	cin.clear();
@@ -128,7 +150,7 @@ void LabAPI::run_complete( string message = "Run Complete, press enter to contin
 	cin.clear();
 }
 
-void LabAPI::printArray (int arrayToPrint[],int size)
+void printArray (int arrayToPrint[],int size)
 {
 	for ( int i = 0; i < size; i++)
 	{
@@ -137,7 +159,7 @@ void LabAPI::printArray (int arrayToPrint[],int size)
 	}
 }
 
-void LabAPI::printArray (char arrayToPrint[],int size)
+void printArray (char arrayToPrint[],int size)
 {
 	for ( int i = 0; i < size; i++)
 	{
@@ -147,7 +169,7 @@ void LabAPI::printArray (char arrayToPrint[],int size)
 }
 
 //returns the index of where the the specified item of search is
-int LabAPI::binarySearch(int theArray[],int size,int search)
+int binarySearch(int theArray[],int size,int search)
 {
 	/*
 		Step 0: Check (or in this case, assume cause we know) the array is already sorted
@@ -187,7 +209,7 @@ int LabAPI::binarySearch(int theArray[],int size,int search)
 }
 
 //sorts an array using ubble sort
-void LabAPI::bubbleSort(int theArray[],int size)
+void bubbleSort(int theArray[],int size)
 {
 	bool sorted = false;//start it as false to it enteres the loop
 	int size2 = size;
@@ -221,7 +243,7 @@ void LabAPI::bubbleSort(int theArray[],int size)
 
 //puts an item in stack of an array
 //1 = was put in, 0 = array was full
-int LabAPI::push(char (&stack)[5], char value, int size)
+int push(char (&stack)[5], char value, int size)
 {
 	int index = size-1;
 	while(index != 0)
@@ -238,7 +260,7 @@ int LabAPI::push(char (&stack)[5], char value, int size)
 }
 
 //takes an item out of stack of an array
-char LabAPI::pop(char (&stack)[5], int size)
+char pop(char (&stack)[5], int size)
 {
 	char deezNutz = stack[0];
 	int index = 1;
@@ -252,7 +274,7 @@ char LabAPI::pop(char (&stack)[5], int size)
 
 //puts an item in queue of an array
 //1 = was put in, 0 = array was full
-int LabAPI::enqueue(char (&Q)[5], char value, int size)
+int enqueue(char (&Q)[5], char value, int size)
 {
 	int index = 0;
 	while (true)
@@ -271,7 +293,7 @@ int LabAPI::enqueue(char (&Q)[5], char value, int size)
 }
 
 //takes an item out of queue of an array
-char LabAPI::dequeue(char (&Q)[5], int size)
+char dequeue(char (&Q)[5], int size)
 {
 	char haGadi = Q[0];
 	int index = 1;
@@ -283,7 +305,7 @@ char LabAPI::dequeue(char (&Q)[5], int size)
 	return haGadi;
 }
 
-string LabAPI::int2String (int intToConvert)
+string int2String (int intToConvert)
 {
 	ostringstream ossT;
 	ossT << intToConvert;
@@ -291,7 +313,7 @@ string LabAPI::int2String (int intToConvert)
 }
 
 //create the log file
-void LabAPI::createLogFile()
+void createLogFile()
 {
 	string path;
 	//get current executable location
@@ -302,7 +324,7 @@ void LabAPI::createLogFile()
 }
 
 //appends to a log file
-void LabAPI::appendLog(string text)
+void appendLog(string text)
 {
 
 }

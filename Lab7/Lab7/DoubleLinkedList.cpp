@@ -6,39 +6,765 @@
 // Last Modified XX/XX/XX      //
 /////////////////////////////////
 
-//includes
+//C library includes
+#include <iostream>
+#include <string>
+#include <sstream>
+#include <ctime>
+#include <cstdlib>
+#include <fstream>
 
+//user includes
 #include "DoubleLinkedList.h"
-//#include "LabAPI.h"
-//defines
+#include "LabAPI.h"
 
+//structs
+struct qb_t
+{
+	string firstName;
+	string lastName;
+	int numWins;
+	int years[YEARS_ARRAY_LENGTH];
+	int type;
+	qb_t* next;
+	qb_t* previous;
+};
+
+//typedefs
+typedef enum type_t
+{
+	first_T=0,
+	last_T=1,
+	other_T=-1
+};
 
 //constants
 
 
-//structs
-
-
-//typedefs
-
-
-//classes
-
-
-//method prototypes
+//method prototypes(if no header file)
 
 
 //other definitions
+using namespace std;
 
 
-
-//the main entry point of the application
+//constructor
 DoubleLinkedList::DoubleLinkedList()
-	{
-		//print("test");
-	}
+{
+	//null up the lists
+	DoubleLinkedList::master = NULL;
+	backup = NULL;
+}
 
+//destructor
 DoubleLinkedList::~DoubleLinkedList()
-	{
+{
 
+}
+
+//add QB directly to the list. appends to the back
+//-1 indicates error
+int DoubleLinkedList::addQB(string fName, string lName, int year)
+{
+	if (master == NULL)
+	{
+		//first entry in the linked list. so, created it
+		master = new qb_t;
+		(*master).firstName=fName;
+		(*master).lastName=lName;
+		(*master).numWins=1;
+		int *yearsPointer = (*master).years;
+		initYearsArray(yearsPointer, YEARS_ARRAY_LENGTH);
+		(*master).years[0]=year;
+		(*master).type=first_T;
+		(*master).next=NULL;
+		(*master).previous=NULL;
+		backup = master;
+		//master = &first;
+		return 1;
 	}
+	else if (QBSize() == 1 && fName != master->firstName && lName != master->lastName)
+	{
+		//second entry in the list, make it and link it to the first
+		master->next = new qb_t;
+		qb_t *temp = master->next;
+		(*temp).firstName=fName;
+		(*temp).lastName=lName;
+		(*temp).numWins=1;
+		int *yearsPointer = (*temp).years;
+		initYearsArray(yearsPointer, YEARS_ARRAY_LENGTH);
+		(*temp).years[0]=year;
+		(*temp).type=last_T;
+		temp->next = master;
+		temp->previous=master;
+		master->previous = temp;
+		return 1;
+	}
+	else
+	{
+		//every other added element to the list
+		//traverse to the last element in the list
+		//create and link
+		qb_t *temp = master;
+		while (temp->type != last_T)
+		{
+			//check for first and last name match
+			if ((temp->firstName == fName) && (temp->lastName == lName))
+			{
+				//just add the year and pluz the wins
+				temp->numWins++;
+				addYear(temp->years,YEARS_ARRAY_LENGTH,year);
+				return 1;
+			}
+			temp = temp->next;
+		}
+		temp->type = other_T;
+		temp->next = new qb_t;//declare the memory space for the QB
+		qb_t *theRealNext = temp->next;//derefrence and create the QB
+		(*theRealNext).firstName=fName;
+		(*theRealNext).lastName=lName;
+		(*theRealNext).numWins=1;
+		int *yearsPointer = (*theRealNext).years;
+		initYearsArray(yearsPointer, YEARS_ARRAY_LENGTH);
+		(*theRealNext).years[0]=year;
+		(*theRealNext).type=last_T;
+		theRealNext->next = master;
+		theRealNext->previous = temp;
+		master->previous = theRealNext;//link it up
+		return 1;
+	}
+	return -1;
+}
+
+//add a series of QB's from file
+//-1 indicates error
+int DoubleLinkedList::addQBFromFile( string fileName )
+{
+	ifstream theFile (fileName);
+	string line;
+	string tempArray[3];
+	int i = 0;
+	if (theFile.is_open())
+	{
+		while (getline(theFile,line))
+		{
+			//while there is a line to grab from the file
+			stringstream parser(line);//grab the line and save it to a string
+			i=0;
+			while(parser.good())
+			{
+				//take each part of the string and split it into an array based on the delimiter of space
+				parser >> tempArray[i];
+				i++;
+			}
+			string fName = tempArray[0];
+			string lName = tempArray[1];
+			string year = tempArray[2];
+			char convert[420];
+			for (int k = 0; k < year.size(); k++)
+			{
+				convert[k] = year[k];//convert the string to an actual character array
+			}
+			sscanf(convert,"%d",&i);//convert the character array to an int
+			addQB(fName,lName,i);
+		}
+		theFile.close();
+		return 0;
+	}
+	return -1;
+}
+
+//get the index of the QB matching the specified criteria
+//-1 indicates error
+int DoubleLinkedList::getIndex(string fN, string lN)
+{
+	int index = 0;
+	qb_t *temp = master;
+	while (true)
+	{
+		if ((temp->firstName == fN) && (temp->lastName == lN))
+		{
+			//if the first and last name match, return the index number
+			return index;
+		}
+		temp = temp->next;
+		index++;
+		if (temp->type == first_T)
+		{
+			//break if we are back to the first item in the list
+			break;
+		}
+	}
+	return -1;
+}
+
+//prints the entire list so far
+void DoubleLinkedList::printList()
+{
+	//print each element in the master linked list
+	if (master == NULL || master == 0) return;
+	qb_t *theNext = master;
+	while (true)
+	{
+		string winz = int2String(theNext->numWins);
+		print(theNext->firstName + " " + theNext->lastName + " won " + winz + " times: " + getAllWins(theNext->years,YEARS_ARRAY_LENGTH));
+		theNext = theNext->next;
+		if (theNext->type == first_T)
+		{
+			break;
+		}
+	}
+}
+
+//prints a custom qb list
+void DoubleLinkedList::printList(qb_t *customList)
+{
+	//print each element in the custom linked list
+	if (customList == NULL || customList == 0) return;
+	qb_t *theNext = customList;
+	print("search results:");
+	int size = QBSize(customList);
+	int i = 0;
+	while (true)
+	{
+		string winz = int2String(theNext->numWins);
+		print(theNext->firstName + " " + theNext->lastName + ", " + winz + " wins in " + getAllWins(theNext->years,YEARS_ARRAY_LENGTH));
+		theNext = theNext->next;
+		i++;
+		if (theNext == NULL || i == size)
+		{
+			break;
+		}
+	}
+}
+
+//deletes the entire list starting from a specific point
+//-1 indicates error
+void DoubleLinkedList::deleteAll(qb_t* startingPoint)
+{
+	if(startingPoint->type != last_T)
+	{
+		deleteAll(startingPoint->next);
+	}
+	delete startingPoint;
+}
+
+//deletes the entire list, starting with master
+//-1 indicates error
+void DoubleLinkedList::deleteAll()
+{
+	deleteAll(master);
+}
+
+//delets a QB from the list based on the first and last name
+//-1 indicates error
+int DoubleLinkedList::deleteQB(string fN, string lN)
+{
+	if (master == NULL || master == 0) return -1;
+	qb_t *theNext = master;
+	while (true)
+	{
+		if ((theNext->firstName == fN) && (theNext->lastName == lN))
+		{
+			if (theNext->type == first_T)
+			{
+				//special case is head
+				qb_t *newMaster = new qb_t;
+				newMaster = theNext->next;
+				newMaster->next = theNext->next->next;
+				newMaster->previous = theNext->previous;
+				master = newMaster;
+				master->type = first_T;
+				newMaster->previous->next = newMaster;
+				delete(theNext);
+			}
+			else if (theNext->type == last_T)
+			{
+				//special case is last
+				//link the previous one over to the next one adn vice versa for previous
+				theNext->previous->next = theNext->next;
+				theNext->next->previous = theNext->previous;
+				//set the type of the new last one to be the last one now
+				theNext->previous->type = last_T;
+				delete (theNext);
+			}
+			else
+			{
+				//link the previous one over to the next one adn vice versa for previous
+				theNext->previous->next = theNext->next;
+				theNext->next->previous = theNext->previous;
+				delete (theNext);
+			}
+			return 1;
+		}
+		theNext = theNext->next;
+		if (theNext->type == first_T)
+		{
+			break;
+		}
+	}
+	return -1;
+}
+
+//deletes a QB from the list based on the index
+//-1 indicates error
+int DoubleLinkedList::deleteQB(int index)
+{
+	if (master == NULL || master == 0) return -1;
+	qb_t *theNext = master;
+	int i = 0;
+	while (true)
+	{
+		if (i == index)
+		{
+			deleteQB(theNext->firstName,theNext->lastName);
+			return 1;
+		}
+		theNext = theNext->next;
+		i++;
+		if (theNext->type == first_T)
+		{
+			break;
+		}
+	}
+	return -1;
+}
+
+//gets the length of the qb list
+//-1 indicates error
+int DoubleLinkedList::QBSize()
+{
+	if (master == NULL) return 0;
+	int count = 0;
+	string firstNameCheck = master->firstName;
+	string lastNameCheck = master->lastName;
+	for ( qb_t *theNext = master; theNext != NULL; theNext = theNext->next)
+	{
+		if ((count > 0) && (firstNameCheck == theNext->firstName) && (lastNameCheck == theNext->lastName))
+		{
+			return count;
+		}
+		count++;
+	}
+	return count;
+}
+
+//gets the length of the qb list
+//-1 indicates error
+int DoubleLinkedList::QBSize(qb_t *customList)
+{
+	if (customList == NULL) return 0;
+	int count = 0;
+	string firstNameCheck = customList->firstName;
+	string lastNameCheck = customList->lastName;
+	for ( qb_t *theNext = customList; theNext != NULL; theNext = theNext->next)
+	{
+		if ((count > 0) && (firstNameCheck == theNext->firstName) && (lastNameCheck == theNext->lastName))
+		{
+			return count;
+		}
+		count++;
+	}
+	return count;
+}
+
+//adds another year to the array of the QB's yearsWon array
+void DoubleLinkedList::addYear(int *years, int size, int year)
+{
+	for (int i = 0; i < YEARS_ARRAY_LENGTH; i++)
+	{
+		//traverse the years array
+		if (years[i]==0)//if this index locatio of the years array is null
+		{
+			//set it equal to this one's year
+			years[i] = year;
+			break;
+		}
+		else
+		{
+			//do nothing
+		}
+	}
+}
+
+//parses the years array for a QB by setting each index value to null (0)
+void DoubleLinkedList::initYearsArray(int *years, int size)
+{
+	for (int i = 0; i < size; i++)
+	{
+		years[i]=0;
+	}
+}
+
+//used in the print statement, gets all wins of a QB from the yearsWonList
+//returns a formatted string with each year that the QB won
+string DoubleLinkedList::getAllWins(int *yearsWon, int size)
+{
+	ostringstream o;
+	for (int i = 0; i < size; i++)
+	{
+		o << yearsWon[i];//append the year won to the stringStream
+		int temp = yearsWon[i+1];
+		if (temp == 0 || temp == -1) break;
+		o << ", ";
+	}
+	return o.str();
+}
+
+//returns a custom linked list of all qb's matching the search criteria
+qb_t* DoubleLinkedList::search(string fName, string lName)
+{
+	qb_t* starter = NULL;
+	qb_t *tempp = master;
+	bool created = false;
+	while (true)
+	{
+		if ((tempp->firstName == fName) && (tempp->lastName == lName))
+		{
+			if (!created)
+			{
+				//if first time in the list
+				starter = new qb_t;
+				(*starter).firstName = (*tempp).firstName;
+				(*starter).lastName = (*tempp).lastName;
+				(*starter).numWins = (*tempp).numWins;
+				(*starter).type = first_T;
+				for (int i = 0; i < YEARS_ARRAY_LENGTH; i++)
+				{
+					(*starter).years[i] = (*tempp).years[i];
+				}
+				(*starter).next = NULL;
+			}
+			else if (QBSize(starter) == 1)
+			{
+				//just keep making the list
+				starter->next = new qb_t;
+				starter->previous = starter->next;
+				qb_t *ttemp = starter->next;
+				(*ttemp).firstName = (*tempp).firstName;
+				(*ttemp).lastName = (*tempp).lastName;
+				(*ttemp).numWins = (*tempp).numWins;
+				(*ttemp).type = last_T;
+				ttemp->next = starter;
+				ttemp->previous = starter;
+				for (int i = 0; i < YEARS_ARRAY_LENGTH; i++)
+				{
+					(*ttemp).years[i] = (*tempp).years[i];
+				}
+			}
+			else
+			{
+				//same as above, but this one is inserting
+				//traverse to the last element in the list
+				//create and link
+				qb_t *ttemp = starter;
+				while (ttemp->type != last_T)
+				{
+					ttemp = ttemp->next;
+				}
+				ttemp->type = other_T;
+				ttemp->next = new qb_t;
+				qb_t *temp = ttemp->next;
+				(*temp).firstName = (*tempp).firstName;
+				(*temp).lastName = (*tempp).lastName;
+				(*temp).numWins = (*tempp).numWins;
+				(*temp).type = last_T;
+				for (int i = 0; i < YEARS_ARRAY_LENGTH; i++)
+				{
+					(*temp).years[i] = (*tempp).years[i];
+				}
+				ttemp->next=temp;
+				temp->previous=ttemp;
+				temp->next=starter;
+			}
+		}
+		tempp = tempp->next;
+		if (tempp->type == first_T)
+		{
+			//end of the list
+			break;
+		}
+	}
+	return starter;
+}
+
+//returns a custom linked list of all qb's matching the search criteria
+qb_t* DoubleLinkedList::search(int year, bool yearOrNumWinz)
+{
+	if(yearOrNumWinz)
+	{
+		//searching for numWinz
+		qb_t* starter = NULL;
+		qb_t *tempp = master;
+		bool created = false;
+		while (true)
+		{
+			if (tempp->numWins == year)
+			{
+				if (!created)
+				{
+					//if first time in the list
+					starter = new qb_t;
+					(*starter).firstName = (*tempp).firstName;
+					(*starter).lastName = (*tempp).lastName;
+					(*starter).numWins = (*tempp).numWins;
+					(*starter).type = first_T;
+					for (int i = 0; i < YEARS_ARRAY_LENGTH; i++)
+					{
+						(*starter).years[i] = (*tempp).years[i];
+					}
+					(*starter).next = NULL;
+					created = true;
+				}
+				else if (QBSize(starter) == 1)
+				{
+					//just keep making the list
+					starter->next = new qb_t;
+					starter->previous = starter->next;
+					qb_t *ttemp = starter->next;
+					(*ttemp).firstName = (*tempp).firstName;
+					(*ttemp).lastName = (*tempp).lastName;
+					(*ttemp).numWins = (*tempp).numWins;
+					(*ttemp).type = last_T;
+					ttemp->next = starter;
+					ttemp->previous = starter;
+					for (int i = 0; i < YEARS_ARRAY_LENGTH; i++)
+					{
+						(*ttemp).years[i] = (*tempp).years[i];
+					}
+				}
+				else
+				{
+					//same as above, but this one is inserting
+					//traverse to the last element in the list
+					//create and link
+					qb_t *ttemp = starter;
+					while (ttemp->type != last_T)
+					{
+						ttemp = ttemp->next;
+					}
+					ttemp->type = other_T;
+					ttemp->next = new qb_t;
+					qb_t *temp = ttemp->next;
+					(*temp).firstName = (*tempp).firstName;
+					(*temp).lastName = (*tempp).lastName;
+					(*temp).numWins = (*tempp).numWins;
+					(*temp).type = last_T;
+					for (int i = 0; i < YEARS_ARRAY_LENGTH; i++)
+					{
+						(*temp).years[i] = (*tempp).years[i];
+					}
+					ttemp->next=temp;
+					temp->previous=ttemp;
+					temp->next=starter;
+				}
+			}
+			tempp = tempp->next;
+			if (tempp->type == first_T)
+			{
+				//end of the list
+				break;
+			}
+		}
+		return starter;
+	}
+	else
+	{
+		//searching for year
+		qb_t* starter = NULL;
+		qb_t *tempp = master;
+		bool created = false;
+		while (true)
+		{
+			for (int i = 0; i < YEARS_ARRAY_LENGTH; i++)
+			{
+				if (tempp->years[i] == year)
+				{
+					if (!created)
+					{
+						//if first time in the list
+						starter = new qb_t;
+						(*starter).firstName = (*tempp).firstName;
+						(*starter).lastName = (*tempp).lastName;
+						(*starter).numWins = (*tempp).numWins;
+						(*starter).type = first_T;
+						for (int i = 0; i < YEARS_ARRAY_LENGTH; i++)
+						{
+							(*starter).years[i] = (*tempp).years[i];
+						}
+						(*starter).next = NULL;
+					}
+					else if (QBSize(starter) == 1)
+					{
+						//just keep making the list
+						starter->next = new qb_t;
+						starter->previous = starter->next;
+						qb_t *ttemp = starter->next;
+						(*ttemp).firstName = (*tempp).firstName;
+						(*ttemp).lastName = (*tempp).lastName;
+						(*ttemp).numWins = (*tempp).numWins;
+						(*ttemp).type = last_T;
+						ttemp->next = starter;
+						ttemp->previous = starter;
+						for (int i = 0; i < YEARS_ARRAY_LENGTH; i++)
+						{
+							(*ttemp).years[i] = (*tempp).years[i];
+						}
+					}
+					else
+					{
+						//same as above, but this one is inserting
+						//traverse to the last element in the list
+						//create and link
+						qb_t *ttemp = starter;
+						while (ttemp->type != last_T)
+						{
+							ttemp = ttemp->next;
+						}
+						ttemp->type = other_T;
+						ttemp->next = new qb_t;
+						qb_t *temp = ttemp->next;
+						(*temp).firstName = (*tempp).firstName;
+						(*temp).lastName = (*tempp).lastName;
+						(*temp).numWins = (*tempp).numWins;
+						(*temp).type = last_T;
+						for (int i = 0; i < YEARS_ARRAY_LENGTH; i++)
+						{
+							(*temp).years[i] = (*tempp).years[i];
+						}
+						ttemp->next=temp;
+						temp->previous=ttemp;
+						temp->next=starter;
+					}
+				}
+			}
+			tempp = tempp->next;
+			if (tempp->type == first_T)
+			{
+				//end of the list
+				break;
+			}
+		}
+		return starter;
+	}
+	return NULL;
+}
+
+//sorts the list using bubbleSort
+void DoubleLinkedList::sortList()
+{
+	bool sorted = false;
+	int size2 = QBSize();
+	int sizePart2 = size2;
+	//detach the list to allow for null checking, and prevent any circular re-refrencing
+	qb_t *temp = master;
+	temp->previous->next = NULL;
+	temp->previous = NULL;
+	while (!sorted)
+	{
+		//use bubble sort algorithem tosort the linked list
+		sorted = true;
+		for (qb_t *te = master; te != NULL; te = te->next)
+		{
+			if (te->next != NULL)
+			{
+				//check to make sure it is a valid element
+				int i = 0;
+				//save the fist character of the last name of the current and next QB element to compare for sorting
+				char current = te->lastName[i];
+				char next = te->next->lastName[i];
+				while (te->lastName[i] == te->next->lastName[i])
+				{
+					//if the characters are equal, use a for loop to traverse down the string for each character
+					i++;
+					if ((i == te->lastName.size()) || (i == te->next->lastName.size()))
+					{
+						//if the last names are the same, sort by first name. same concept
+						int j = 0;
+						current = te->firstName[j];
+						next = te->next->firstName[j];
+						while (te->firstName[j] == te->next->firstName[j])
+						{
+							j++;
+							current = te->firstName[j];
+							next = te->next->firstName[j];
+						}
+						break;
+					}
+					current = te->lastName[i];
+					next = te->next->lastName[i];
+				}
+				if (current > next)
+				{
+					//swap
+					sorted = false;
+					if(te->type == first_T)
+					{
+						//special case of first one
+						qb_t *other = te->next;
+						qb_t *next = te->next->next;
+						//set type orders
+						other->type = first_T;
+						te->type = other_T;
+						//create next links
+						other->next = te;
+						te->next = next;
+						//create previous links
+						next->previous = te;
+						te->previous = other;
+						other->previous = NULL;
+						master = other;
+					}
+					else if ((te->type == last_T) || te->next->next == NULL)
+					{
+						//special case of last one
+						qb_t* other = te->next;
+						qb_t* prev = te->previous;
+						//set orders
+						other->type = other_T;
+						te->type = last_T;
+						//create next links
+						prev->next = other;
+						te->next = NULL;
+						other->next = te;
+						//create previous links
+						other->previous = prev;
+						te->previous = other;
+					}
+					else
+					{
+						//regular case
+						qb_t *previous = te->previous;
+						previous->next = NULL;
+						qb_t *next = te->next->next;
+						next->previous = NULL;
+						qb_t *moving = te->next;
+						moving->next = NULL;
+						moving->previous = NULL;
+						te->previous = NULL;
+						te->next = NULL;
+						//relink nexts
+						previous->next = moving;
+						moving->next=te;
+						te->next=next;
+						//relink previouses
+						next->previous = te;
+						te->previous = moving;
+						moving->previous=previous;
+					}
+					//backup and break the links for the next and previous not being flipped
+				}
+			}
+		}
+	}
+	//relink the lists and declare which is which in terms of type
+	qb_t *te2 = master;
+	te2->type = first_T;
+	for ( ;te2->next != NULL; te2 = te2->next)
+	{
+		te2->next->type = other_T;
+	}
+	te2->type = last_T;
+	te2->next=master;
+	master->previous = te2;
+}

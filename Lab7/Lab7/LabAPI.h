@@ -6,27 +6,31 @@
 // Last Modified 10/24/16      //
 /////////////////////////////////
 
-class LabAPI
-{
-private:
-	std::ostringstream oss;//extra std::string stream to allow for other types than std::strings to be added to an output
-	std::string swapstring;
+//C library includes
+#include <iostream>
+#include <string>
+#include <sstream>
+#include <ctime>
+#include <cstdlib>
+#include <fstream>
 
-public:
-	//method to simplifing the procedure of printing to the console
-void print(std::string str);
+//other definitions
+using namespace std;
 
+//method/class prototypes
+
+//method to simplifing the procedure of printing to the console
+void print(string str);
 
 //method to simplifing the procedure of printing to the console
 void print(unsigned char c);
 
-
 //method to provide a blank space
 void print();
 
-void print(std::string text, char value);
+void print(string text, char value);
 
-void print(std::string text, int value);
+void print(string text, int value);
 
 void printPointer(char *refChar);
 
@@ -35,7 +39,6 @@ void printPointer(int *refInt);
 void printPointer(float *refFloat);
 
 void printPointer(double *refDub);
-
 
 //returns the size of the character array of characters that are in use
 int size(char temp[]);
@@ -48,9 +51,9 @@ int size(unsigned char temp[]);
 
 //swapps all the items of a given array from top and bottom
 //same logic as lab 1
-std::string swapString (std::string stringToSwap);
+string swapString (string stringToSwap);
 
-void run_complete( std::string message);
+void run_complete( string message);
 
 void printArray (int arrayToPrint[],int size);
 
@@ -76,12 +79,10 @@ int enqueue(char (&Q)[5], char value, int size);
 //takes an item out of queue of an array
 char dequeue(char (&Q)[5], int size);
 
-std::string int2String (int intToConvert);
+string int2String (int intToConvert);
 
 //create the log file
 void createLogFile();
 
 //appends to a log file
-void appendLog(std::string text);
-
-};
+void appendLog(string text);
