@@ -28,14 +28,15 @@ struct student_t{
 };
 
 //method prototypes
-void add( string firstName, string lastName, int gradee);
-void remove(string firstName, string lastName);
-void remove(int grade);
+int add( string firstName, string lastName, int gradee);
+void removeL(string firstName, string lastName);
+void removeL(int grade);
 student_t* search( string firstname, string lastName);
 student_t* search(int gradeSearch);
 void printList();
 void printList(student_t *tmep);
 void removeAll(student_t *s);
+int countL();
 
 //other definitions
 using namespace std;
@@ -44,16 +45,98 @@ student_t *master = NULL;
 //the main entry point of the application
 int main()
 {
+	add("Willard","Wider",92);
+	//add("Willard","Wider",90);
+	add("Bryon","Kushman",90);
+  	add("Deez","Nutz",92);
 	bool done = false;
 	string input = "nullLOL";
+	int inputGrade = 0;
+	string fNameInput = "null";
+	string lNameInput = "null";
 	while (!done)
 	{
 		print("Type add, remove, removeAll, search, or print, or quit");
 		cin >> input;
 		if (input == "quit")
 		{
-
 			done = true;
+		}
+		else if (input == "print")
+		{
+			//print the list
+			printList();
+		}
+		else if (input == "search")
+		{
+			print("type grade or name");
+			cin >> input;
+			if (input == "grade")
+			{
+				//search grade
+				print("input grade 0-100");
+				cin >> inputGrade;
+				printList(search(inputGrade));
+			}
+			else if (input == "name")
+			{
+				//search name
+				print("input first name");
+				cin >> fNameInput;
+				print("input last name");
+				cin >> lNameInput;
+				printList(search(fNameInput,lNameInput));
+			}
+			else
+			{
+				print("invalid input");
+			}
+		}
+		else if (input == "removeAll")
+		{
+			removeAll(master);
+		}
+		else if (input == "remove")
+		{
+			print("type grade or name");
+			cin >> input;
+			if (input == "grade")
+			{
+				//search grade
+				print("input grade 0-100");
+				cin >> inputGrade;
+				removeL(inputGrade);
+			}
+			else if (input == "name")
+			{
+				//search name
+				print("input first name");
+				cin >> fNameInput;
+				print("input last name");
+				cin >> lNameInput;
+				removeL(fNameInput,lNameInput);
+			}
+			else
+			{
+				print("invalid input");
+			}
+		}
+		else if (input == "add")
+		{
+			print("input grade 0-100");
+			cin >> inputGrade;
+			print("input first name");
+			cin >> fNameInput;
+			print("input last name");
+			cin >> lNameInput;
+			if(!add(fNameInput,lNameInput,inputGrade))
+			{
+
+			}
+			else
+			{
+				print("Error: name already exists");
+			}
 		}
 		else
 		{
@@ -63,7 +146,7 @@ int main()
 	return 0;
 }
 
-void add( string firstName, string lastName, int gradee)
+int add( string firstName, string lastName, int gradee)
 {
 	if (master == NULL)
 	{
@@ -72,10 +155,18 @@ void add( string firstName, string lastName, int gradee)
 		(*temp).lName = lastName;
 		(*temp).next = NULL;
 		(*temp).grade = gradee;
+		master = temp;
 	}
 	else
 	{
 		student_t *traverseTemp = master;
+		while (traverseTemp != NULL)
+		{
+			if((traverseTemp->fname == firstName) && (traverseTemp->lName == lastName))
+				return -1;
+			traverseTemp = traverseTemp->next;
+		}
+		traverseTemp = master;
 		while (traverseTemp->next != NULL)
 		{
 			traverseTemp = traverseTemp->next;
@@ -87,41 +178,112 @@ void add( string firstName, string lastName, int gradee)
 		(*temp).grade = gradee;
 		traverseTemp->next = temp;
 	}
+	return 0;
 }
 
-void remove(string firstName, string lastName)
+void removeL(string firstName, string lastName)
 {
-	student_t *temp = master;
-	while (temp->next != NULL)
+	for (student_t *temp = master; temp != NULL; )
 	{
-		if ((temp->fname == firstName) && (temp->lName == lastName))
+		student_t *previous = temp;
+		student_t *current = temp->next;
+		if ((previous->fname == firstName) && (previous->lName == lastName))
 		{
-			temp->next = temp->next->next;
-			delete(temp->next);
+			//first in list
+			
+			
+				//replace master
+				master = previous->next;
+				temp = temp->next;
+				delete(previous);
+				previous = NULL;
+			
+			continue;
 		}
-		temp = temp->next;
+		else if (current == NULL)
+		{
+			//DNE
+			break;
+		}
+		else if (current->next == NULL)
+		{
+			//last in list
+			if ((current->fname == firstName) && (current->lName == lastName))
+			{
+				current = NULL;
+				previous->next = NULL;
+			}
+			break;
+		}
+		else
+		{
+			//regualr middle part somewhere
+			if((current->fname == firstName) && (current->lName == lastName))
+			{
+				previous->next = current->next;
+			}
+			temp = temp->next;
+			continue;
+		}
+		
 	}
 }
 
-void remove(int grade)
+void removeL(int grade)
 {
-	student_t *temp = master;
-	while (temp->next != NULL)
+	for (student_t *temp = master; temp != NULL; )
 	{
-		if (temp->grade == grade)
+		student_t *previous = temp;
+		student_t *current = temp->next;
+		if (previous->grade == grade)
 		{
-			temp->next = temp->next->next;
-			delete(temp->next);
+			//first in list
+			
+			
+				//replace master
+				master = previous->next;
+				temp = temp->next;
+				delete(previous);
+				previous = NULL;
+			
+			continue;
 		}
-		temp = temp->next;
+		else if (current == NULL)
+		{
+			//DNE
+			break;
+		}
+		else if (current->next == NULL)
+		{
+			//last in list
+			if (current->grade == grade)
+			{
+				current = NULL;
+				previous->next = NULL;
+			}
+			break;
+		}
+		else
+		{
+			//regualr middle part somewhere
+			if(current->grade == grade)
+			{
+				previous->next = current->next;
+			}
+			temp = temp->next;
+			continue;
+		}
+		
 	}
 }
 
 student_t* search( string firstname, string lastName)
 {
+	if (master == NULL)
+		return NULL;
 	student_t *temp = master;
 	student_t *returnTemp = NULL;
-	while (temp->next != NULL)
+	while (true)
 	{
 		if ((temp->fname == firstname) && (temp->lName == lastName))
 		{
@@ -143,6 +305,10 @@ student_t* search( string firstname, string lastName)
 				(*next).next = NULL;
 			}
 		}
+		if (temp->next == NULL)
+		{
+			break;
+		}
 		temp = temp->next;
 	}
 	return returnTemp;
@@ -150,9 +316,11 @@ student_t* search( string firstname, string lastName)
 
 student_t* search(int gradeSearch)
 {
+	if (master == NULL)
+		return NULL;
 	student_t *temp = master;
 	student_t *returnTemp = NULL;
-	while (temp->next != NULL)
+	while (true)
 	{
 		if (temp->grade == gradeSearch)
 		{
@@ -174,6 +342,10 @@ student_t* search(int gradeSearch)
 				(*next).next = NULL;
 			}
 		}
+		if (temp->next == NULL)
+		{
+			break;
+		}
 		temp = temp->next;
 	}
 	return returnTemp;
@@ -181,10 +353,19 @@ student_t* search(int gradeSearch)
 
 void printList()
 {
+	if (master == NULL)
+	{
+		print("list is empty");
+		return;
+	}
 	student_t *current = master;
-	while (current->next != NULL)
+	while (true)
 	{
 		print("student " + current->fname + ", " + current->lName + " has a grade of",current->grade);
+		if (current->next == NULL)
+		{
+			break;
+		}
 		current = current->next;
 	}
 }
@@ -192,18 +373,47 @@ void printList()
 void printList(student_t *tmep)
 {
 	print("search results:");
+	if (tmep == NULL)
+	{
+		print("search is empty");
+		return;
+	}
 	student_t *current = tmep;
-	while (current->next != NULL)
+	while (true)
 	{
 		print("student " + current->fname + ", " + current->lName + " has a grade of",current->grade);
+		if (current->next == NULL)
+		{
+			break;
+		}
 		current = current->next;
 	}
 }
 
 void removeAll(student_t *s)
 {
-	while (master != NULL)
+	if (s != NULL)
 	{
-		removeAll(master->next);
+		removeAll(s->next);
+		delete(s);
+		master = NULL;
 	}
+}
+
+int countL()
+{
+	int count = 0;
+	student_t *current = master;
+	if (master==NULL)
+		return count;
+	while (true)
+	{
+		count++;
+		if (current->next == NULL)
+		{
+			break;
+		}
+		current = current->next;
+	}
+	return count;
 }

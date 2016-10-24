@@ -231,6 +231,7 @@ int push(char (&stack)[5], char value, int size)
 		index--;
 	}
 	stack[0] = value;
+	return 1;
 }
 
 //takes an item out of stack of an array
@@ -284,4 +285,21 @@ string int2String (int intToConvert)
 	ostringstream ossT;
 	ossT << intToConvert;
 	return ossT.str();
+}
+
+//create the log file
+void createLogFile()
+{
+	string path;
+	//get current executable location
+
+	//open the filestream
+
+
+}
+
+//appends to a log file
+void appendLog(string text)
+{
+
 }
