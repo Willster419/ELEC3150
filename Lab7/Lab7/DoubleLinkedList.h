@@ -21,7 +21,7 @@
 struct qb_t;
 
 //typedefs
-typedef enum type_t;
+//typedef enum type_t;
 
 //other definitions
 using namespace std;

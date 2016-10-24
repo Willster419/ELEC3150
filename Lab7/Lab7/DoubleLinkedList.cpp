@@ -140,7 +140,7 @@ int DoubleLinkedList::addQB(string fName, string lName, int year)
 //-1 indicates error
 int DoubleLinkedList::addQBFromFile( string fileName )
 {
-	ifstream theFile (fileName);
+	ifstream theFile (fileName.c_str());
 	string line;
 	string tempArray[3];
 	int i = 0;

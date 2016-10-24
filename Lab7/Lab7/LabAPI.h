@@ -23,7 +23,7 @@ using namespace std;
 void print(string str);
 
 //method to simplifing the procedure of printing to the console
-void print(unsigned char c);
+//void print(unsigned char c);
 
 //method to provide a blank space
 void print();
