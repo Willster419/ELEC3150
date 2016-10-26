@@ -59,7 +59,10 @@ DoubleLinkedList::DoubleLinkedList()
 //destructor
 DoubleLinkedList::~DoubleLinkedList()
 {
-
+	if (master != NULL)
+	{
+		deleteAll();
+	}
 }
 
 //add QB directly to the list. appends to the back

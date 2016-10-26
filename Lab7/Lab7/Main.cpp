@@ -67,10 +67,13 @@ int main()
 	while (!done)
 	{
 		print();
-		print("Type add, remove, removeAll, search, or print, or quit");
+		print("Type add, remove, removeAll, search, print, or quit");
 		cin >> input;
 		if (input == "quit")
 		{
+			print("Deleting lists...");
+			QB->~DoubleLinkedList();
+			EM->~DoubleLinkedList();
 			done = true;
 		}
 		else if (input == "print")
@@ -102,7 +105,7 @@ int main()
 		}
 		else if (input == "search")
 		{
-			print("type year or name or numWins");
+			print("type 'year' or 'name' or 'numWins'");
 			cin >> input;
 			if (input == "year")
 			{
@@ -228,7 +231,7 @@ int main()
 		}
 		else if (input == "remove")
 		{
-			print("type name or index");
+			print("type 'name' or 'index'");
 			cin >> input;
 			if (input == "index")
 			{
