@@ -29,9 +29,6 @@
 //typedefs
 
 
-//method prototypes
-
-
 //other definitions
 using namespace std;
 ostringstream oss;//extra std::string stream to allow for other types than std::strings to be added to an output
