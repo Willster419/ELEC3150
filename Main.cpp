@@ -1,17 +1,21 @@
 /////////////////////////////////
 // Willard Wider               //
+// Main.cpp                    //
 // XX/XX/XX                    //
 // Lab X                       //
 // Last Modified XX/XX/XX      //
 /////////////////////////////////
 
-//includes
+//C library includes
 #include <iostream>
 #include <string>
 #include <sstream>
 #include <ctime>
-#include "LabAPI.h"
 #include <cstdlib>
+#include <fstream>
+
+//user includes
+#include "LabAPI.h"
 
 //defines
 

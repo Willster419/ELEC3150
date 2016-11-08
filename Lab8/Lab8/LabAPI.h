@@ -13,8 +13,11 @@
 #include <ctime>
 #include <cstdlib>
 #include <fstream>
+
+//header guard
 #ifndef LAB_API_H
 #define LAB_API_H
+
 //other definitions
 using namespace std;
 
