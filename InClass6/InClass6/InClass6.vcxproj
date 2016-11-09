@@ -11,8 +11,8 @@
     </ProjectConfiguration>
   </ItemGroup>
   <PropertyGroup Label="Globals">
-    <ProjectGuid>{64865F9B-30D6-46DC-8A40-BF83F9DBDD6D}</ProjectGuid>
-    <RootNamespace>Lab9</RootNamespace>
+    <ProjectGuid>{035FCA26-AC86-4CBA-BDEA-A69548D6E09D}</ProjectGuid>
+    <RootNamespace>InClass6</RootNamespace>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">
@@ -60,17 +60,15 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClInclude Include="Intern.h" />
+    <ClInclude Include="Circle.h" />
     <ClInclude Include="LabAPI.h" />
-    <ClInclude Include="Person.h" />
-    <ClInclude Include="Student.h" />
+    <ClInclude Include="Shape.h" />
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="Intern.cpp" />
+    <ClCompile Include="Circle.cpp" />
     <ClCompile Include="LabAPI.cpp" />
     <ClCompile Include="Main.cpp" />
-    <ClCompile Include="Person.cpp" />
-    <ClCompile Include="Student.cpp" />
+    <ClCompile Include="Shape.cpp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
