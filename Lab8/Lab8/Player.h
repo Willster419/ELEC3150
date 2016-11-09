@@ -35,11 +35,15 @@ private:
 public:
 	Player();
 	Player(string namee, int numberr, int twoShotAccc, int threeShottAccc);
+	int takeShot(int twoOrthree);
 	int getTwoShotAcc();
 	int getThreeShotAcc();
-	int takeShot(int twoOrthree);
 	string getName();
 	int getNumbah();
+	void setTwoShotAcc(int twoShot);
+	void setThreeShotAcc(int threeShot);
+	void setName(string nayme);
+	void setNumbah(int de_numbah);
 	~Player();
 
 };
