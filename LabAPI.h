@@ -3,7 +3,7 @@
 // LabAPI.h                    //
 // 09/21/16                    //
 // General Lab Assistance File //
-// Last Modified 11/01/16      //
+// Last Modified 11/09/16      //
 /////////////////////////////////
 
 //C library includes
@@ -20,6 +20,7 @@
 
 //other definitions
 using namespace std;
+
 
 //method/class prototypes
 
@@ -92,4 +93,8 @@ void createLogFile();
 
 //appends to a log file
 void appendLog(string text);
+
+//creates a blank vector of type string
+
+
 #endif
