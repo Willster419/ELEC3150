@@ -21,7 +21,6 @@
 //other definitions
 using namespace std;
 
-
 //method/class prototypes
 
 //method to simplifing the procedure of printing to the console

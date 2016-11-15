@@ -69,7 +69,8 @@ int main()
 	i.addWorkSkill("Communications");
 
 	print();
-	//print each one
+	//print each type with all relevant information
+
 	//person info
 	print("Person " + p.getFname() + " " + p.getLname() + " from " + p.getCity());
 	print();
@@ -78,16 +79,17 @@ int main()
 	print("Person " + s.getFname() + " " + s.getLname() + " from " + s.getCity());
 	oss2 << "is also student of " << s.getSchool() << " graduating " << s.getClassYear() << " with graduation date " << s.getGraduationDate();
 	print(oss2.str());
+	oss2.str("");
 	print("also has the following school skills");
 	print(s.getSchoolSkillz());
-	print();
-	
 	//intern info
 	print("Person " + i.getFname() + " " + i.getLname() + " from " + i.getCity());
 	oss2 << "is also student of " << i.getSchool() << " graduating " << i.getClassYear() << " with graduation date " << i.getGraduationDate();
 	print(oss2.str());
+	oss2.str("");
 	oss2 << "is also intern of " << i.getCompanyOfEmployment() << " with pay " << i.getWeeklyPay() << " with job completion date " << i.getDateJobCompletion();
 	print(oss2.str());
+	oss2.str("");
 	print("also has the following school skills");
 	cout << i.getSchoolSkillz();
 	print("also has the following work skills");
