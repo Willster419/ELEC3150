@@ -26,14 +26,14 @@ using namespace std;
 #include "LabAPI.h"
 
 class Intern :
-	public Student
+	public Student//type of student, which is a type of person
 {
-private:
+private://related only to intern, not person or student
 	string companyOfEmployment;
 	float weeklyPay;
 	string dateJobCompletion;
 	vector<string> workSkillz;
-public:
+public://same as above
 	string getCompanyOfEmployment();
 	float getWeeklyPay();
 	string getDateJobCompletion();
@@ -42,6 +42,7 @@ public:
 	void setDateJobCompletion(string date);
 	Intern();
 	Intern(string comp, float pay, string date);
+	//same as student
 	void addWorkSkill(string skill);
 	string getWorkSkillz();
 	~Intern();

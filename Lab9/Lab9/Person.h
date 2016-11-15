@@ -3,7 +3,7 @@
 // Person.h                    //
 // 11/09/16                    //
 // Person class header         //
-// Last Modified 11/09/16      //
+// Last Modified 11/14/16      //
 /////////////////////////////////
 
 //C library includes
@@ -23,15 +23,18 @@
 using namespace std;
 #include "LabAPI.h"
 
-class Person
+class Person //base class person
 {
 private:
+	//private instance variables for all further inheritances
 	string homeCity;
 	int age;
 	string fname;
 	string lname;
-	vector<string> skillz;
 public:
+	//methods for all types of person
+	///////////////////////
+	//standard gets and sets
 	string getCity();
 	string getFname();
 	string getLname();
@@ -40,7 +43,10 @@ public:
 	void setFName(string fn);
 	void setLName(string ln);
 	void setAge(int a);
+	//////////////////////
+	//standard constructor
 	Person();
+	//constructor with ability to define instance variables on instance start
 	Person(string city, int a, string fn, string ln);
 	~Person();
 };

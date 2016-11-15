@@ -38,6 +38,9 @@ ostringstream oss2;
 //the main entry point of the application
 int main()
 {
+	//to do this in array (or vector)
+	//Person *peopleList[3];
+
 	//Creating all values of Person
 	Person p = *new Person("Hollis",21,"Willard","Wider");
 
